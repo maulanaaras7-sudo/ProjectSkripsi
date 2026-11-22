@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { MathText } from "@/components/MathText";
 
 type Role = "guru" | "siswa" | undefined;
 
@@ -32,9 +33,9 @@ export function LegacyHome({ primaryHref, primaryLabel, userRole }: { primaryHre
         <div className="cta-row"><Link className="btn-primary" href={primaryHref}>{primaryLabel}</Link><Link className="btn-ghost" href={menu.guide}>{menu.guideLabel}</Link></div>
         <div className="algebra-card">
           <h4>Tampilan aljabar</h4>
-          <div className="row"><span className="dot" style={{ background: "var(--curve-f)" }} /><span className="mono">f(x) = 2x + 1</span></div>
-          <div className="row"><span className="dot" style={{ background: "var(--curve-g)" }} /><span className="mono">g(x) = x² − {Math.abs(c)}</span><input aria-label="Nilai c" type="range" min="-4" max="4" step="1" value={c} onChange={(event) => setC(Number(event.target.value))} /></div>
-          <div className="row"><span className="dot" style={{ background: "var(--ink)" }} /><span className="mono">(f∘g)(x) = 2(x²−{Math.abs(c)})+1</span></div>
+          <div className="row"><span className="dot" style={{ background: "var(--curve-f)" }} /><MathText className="mono">\\(f(x) = 2x + 1\\)</MathText></div>
+          <div className="row"><span className="dot" style={{ background: "var(--curve-g)" }} /><MathText className="mono">{`\\(g(x) = x^{2} - ${Math.abs(c)}\\)`}</MathText><input aria-label="Nilai c" type="range" min="-4" max="4" step="1" value={c} onChange={(event) => setC(Number(event.target.value))} /></div>
+          <div className="row"><span className="dot" style={{ background: "var(--ink)" }} /><MathText className="mono">{`\\((f\\circ g)(x) = 2(x^{2}-${Math.abs(c)})+1\\)`}</MathText></div>
         </div>
       </div>
       <div className="panel home-preview-graph">

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { MathText } from "@/components/MathText";
 
 type Question = { id: number; pertanyaan: string; options: Array<{ value: string; text: string }> };
 const duration = 60 * 60;
@@ -84,6 +85,6 @@ export function Evaluation({ kind }: { kind: "pretest" | "posttest" }) {
     {message && <div className="alert alert-danger" role="alert">{message}</div>}
     <div className="sticky-submit evaluation-summary"><span><strong>{answered}/{questions.length}</strong> soal dijawab <span aria-hidden="true">·</span> <span className="timer">{time}</span><small className="autosave-label">{autosave}</small></span><button className="btn-primary" disabled={submitting} type="submit">{submitting ? "Menyimpan…" : "Kumpulkan jawaban"}</button></div>
     <p className="evaluation-note">Sisa waktu disimpan oleh server dan tetap berjalan ketika halaman dimuat ulang atau dibuka dari perangkat lain. Jawaban yang belum dipilih dihitung salah saat dikumpulkan.</p>
-    {questions.map((question, index) => <article className="question-card" key={question.id}><span className="question-number">Soal {index + 1} dari {questions.length}</span><p className="question-text">{question.pertanyaan}</p><div className="question-options">{question.options.map((option, optionIndex) => <label className="question-option" key={option.value}><input type="radio" name={`q-${question.id}`} value={option.value} checked={answers[question.id] === option.value} onChange={() => setAnswers((value) => ({ ...value, [question.id]: option.value }))} /><span><strong>{String.fromCharCode(65 + optionIndex)}.</strong> {option.text}</span></label>)}</div></article>)}
+    {questions.map((question, index) => <article className="question-card" key={question.id}><span className="question-number">Soal {index + 1} dari {questions.length}</span><p className="question-text"><MathText>{question.pertanyaan}</MathText></p><div className="question-options">{question.options.map((option, optionIndex) => <label className="question-option" key={option.value}><input type="radio" name={`q-${question.id}`} value={option.value} checked={answers[question.id] === option.value} onChange={() => setAnswers((value) => ({ ...value, [question.id]: option.value }))} /><span><strong>{String.fromCharCode(65 + optionIndex)}.</strong> <MathText>{option.text}</MathText></span></label>)}</div></article>)}
   </form>;
 }

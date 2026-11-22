@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { ExamplePractice } from "@/components/ExamplePractice";
+import { MathText } from "@/components/MathText";
 
 type Level = "rendah" | "sedang" | "tinggi";
 type Question = { id: number; pertanyaan: string; pilihan_a: string; pilihan_b: string; pilihan_c: string; pilihan_d: string; pilihan_e: string | null };
@@ -65,7 +66,7 @@ export function Training() {
     {!progress?.selesai_latihan && <ExamplePractice activeLevel={activeLevel ?? null} />}
     {progress?.selesai_latihan ? <section className="panel training-complete"><span className="eyebrow">Latihan selesai</span><h2>Post-test sudah terbuka</h2><p>Selesaikan evaluasi akhir untuk melihat perkembangan belajar Anda.</p><a className="btn-primary" href="/posttest">Lanjut ke post-test</a></section> : session ? <form onSubmit={submit}>
       <section className="session-heading"><div><span className="eyebrow">Tingkat {labels[session.tingkat]}</span><h2>Sesi {session.nomor_sesi} dari 10</h2></div><span>{questions.length} soal · Target 80%</span></section>
-      {questions.map((question, index) => <article className="question-card" key={question.id}><span className="question-number">Soal {index + 1} dari {questions.length}</span><p className="question-text">{question.pertanyaan}</p><div className="question-options">{(["a", "b", "c", "d", "e"] as const).map((key, optionIndex) => question[`pilihan_${key}`] ? <label className="question-option" key={key}><input type="radio" name={`q-${question.id}`} value={key} checked={answers[question.id] === key} onChange={() => setAnswers((value) => ({ ...value, [question.id]: key }))} /><span><strong>{String.fromCharCode(65 + optionIndex)}.</strong> {question[`pilihan_${key}`]}</span></label> : null)}</div></article>)}
+      {questions.map((question, index) => <article className="question-card" key={question.id}><span className="question-number">Soal {index + 1} dari {questions.length}</span><p className="question-text"><MathText>{question.pertanyaan}</MathText></p><div className="question-options">{(["a", "b", "c", "d", "e"] as const).map((key, optionIndex) => question[`pilihan_${key}`] ? <label className="question-option" key={key}><input type="radio" name={`q-${question.id}`} value={key} checked={answers[question.id] === key} onChange={() => setAnswers((value) => ({ ...value, [question.id]: key }))} /><span><strong>{String.fromCharCode(65 + optionIndex)}.</strong> <MathText>{question[`pilihan_${key}`] ?? ""}</MathText></span></label> : null)}</div></article>)}
       <div className="sticky-submit"><span><strong>{Object.keys(answers).length}/{questions.length}</strong> soal dijawab</span><button className="btn-primary" disabled={busy} type="submit">{busy ? "Menilai…" : "Kumpulkan sesi"}</button></div>
     </form> : <section className="panel session-launch"><span className="eyebrow">Siap berlatih?</span><h2>Tingkat {activeLevel ? labels[activeLevel] : "—"}</h2><p>Setiap sesi berisi 10 soal. Jawab seluruh soal sebelum dikumpulkan; progres baru berubah setelah sesi dinilai.</p><button className="btn-primary" type="button" disabled={busy} onClick={start}>{busy ? "Menyiapkan…" : `Mulai sesi ${(levels.find((item) => item.tingkat === activeLevel)?.jumlah_sesi ?? 0) + 1}`}</button></section>}
   </>;

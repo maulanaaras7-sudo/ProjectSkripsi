@@ -153,8 +153,12 @@ function updateFormulaDisplay() {
 
   const bSign = Number(b) >= 0 ? `+${b}` : b;
   const cSign = Number(c) >= 0 ? `+${c}` : c;
-  document.getElementById('formula-display').innerHTML =
-    `f(x)=${a}x${bSign}, g(x)=x&sup2;${cSign}`;
+  const formula = document.getElementById('formula-display');
+  formula.textContent = `\\(f(x)=${a}x${bSign},\\;g(x)=x^2${cSign}\\)`;
+  if (window.MathJax?.typesetPromise) {
+    window.MathJax.typesetClear?.([formula]);
+    window.MathJax.typesetPromise([formula]);
+  }
 }
 
 function wireSliders() {

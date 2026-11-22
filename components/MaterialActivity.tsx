@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { MathText } from "@/components/MathText";
 
 type Step = {
   id: number;
@@ -61,18 +62,18 @@ export function MaterialActivity({ activity, canSave }: { activity: Activity; ca
     </button>
     {open && <section className="activity-panel">
       <div className="activity-heading"><div><span className="eyebrow">Latihan terbimbing</span><h3>{activity.judul}</h3></div><strong>{completed}/{steps.length} langkah selesai</strong></div>
-      <p>{activity.deskripsi} Setiap langkah harus diselesaikan secara berurutan.</p>
-      <div className="activity-problem"><span>Soal yang akan diselesaikan</span><strong>{activity.soal_ringkas}</strong></div>
+      <p><MathText>{activity.deskripsi}</MathText> Setiap langkah harus diselesaikan secara berurutan.</p>
+      <div className="activity-problem"><span>Soal yang akan diselesaikan</span><strong><MathText>{activity.soal_ringkas}</MathText></strong></div>
       {!canSave ? <div className="alert">Masuk sebagai siswa agar jawaban dan progres tersimpan.</div> : <>
         <div className="progress-track"><span style={{ width: `${steps.length ? completed / steps.length * 100 : 0}%` }} /></div>
         {steps.map((step, index) => {
           const locked = index > 0 && !steps[index - 1].selesai;
           return <article className={`activity-step ${step.selesai ? "is-complete" : ""}`} key={step.id}>
             <strong>Langkah {index + 1} dari {steps.length}{step.selesai ? " ✓" : ""}</strong>
-            <p>{step.pertanyaan}</p>
-            <div className="question-options">{step.pilihan.map((option) => <label className="question-option" key={option.value}><input type="radio" name={`step-${step.id}`} value={option.value} disabled={locked || step.selesai} checked={answers[step.id] === option.value} onChange={() => setAnswers((value) => ({ ...value, [step.id]: option.value }))}/><span>{option.label}</span></label>)}</div>
+            <p><MathText>{step.pertanyaan}</MathText></p>
+            <div className="question-options">{step.pilihan.map((option) => <label className="question-option" key={option.value}><input type="radio" name={`step-${step.id}`} value={option.value} disabled={locked || step.selesai} checked={answers[step.id] === option.value} onChange={() => setAnswers((value) => ({ ...value, [step.id]: option.value }))}/><span><MathText>{option.label}</MathText></span></label>)}</div>
             <button type="button" className="btn-primary" disabled={locked || step.selesai || !answers[step.id] || busy !== null} onClick={() => check(step, index)}>{step.selesai ? "Sudah selesai" : busy === step.id ? "Memeriksa…" : "Periksa jawaban"}</button>
-            {feedback[step.id] && <div className="alert"><strong>{feedback[step.id].text}</strong>{feedback[step.id].hint && <p>Petunjuk: {feedback[step.id].hint}</p>}</div>}
+            {feedback[step.id] && <div className="alert"><strong><MathText>{feedback[step.id].text}</MathText></strong>{feedback[step.id].hint && <p>Petunjuk: <MathText children={feedback[step.id].hint ?? ""} /></p>}</div>}
           </article>;
         })}
         {completed === steps.length && <div className="activity-finish"><strong>Aktivitas selesai!</strong><span> Anda telah menyelesaikan “{activity.judul}”.</span><button type="button" className="btn-ghost" disabled={busy !== null} onClick={reset}>Ulangi aktivitas</button></div>}
