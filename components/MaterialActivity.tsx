@@ -55,7 +55,7 @@ export function MaterialActivity({ activity, canSave }: { activity: Activity; ca
     setBusy(null);
   }
 
-  return <div className="content-card material-activity">
+  return <div className="material-activity">
     <button type="button" className="btn-primary" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
       {open ? "Tutup aktivitas" : "Belajar interaktif"}
     </button>

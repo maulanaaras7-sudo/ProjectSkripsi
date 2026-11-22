@@ -24,6 +24,7 @@ const files = [
   "database/neon/04_finalize.sql",
   "database/neon/05_parity_schema.sql",
   "database/neon/06_seed_examples.sql",
+  "database/neon/07_sync_reference_materials.sql",
 ];
 
 try {
