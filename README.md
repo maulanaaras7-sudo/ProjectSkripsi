@@ -28,6 +28,8 @@ Versi Next.js dari Fungsiverse yang disiapkan untuk Vercel dengan PostgreSQL Neo
    2. `database/neon/02_seed_questions.sql`
    3. `database/neon/03_seed_activities.sql`
    4. `database/neon/04_finalize.sql`
+   5. `database/neon/05_parity_schema.sql` (menambahkan tabel paritas alur PHP: contoh soal dan draf evaluasi)
+   6. `database/neon/06_seed_examples.sql` (176 contoh soal adaptif dari database referensi PHP)
 
 Folder `database/sql` adalah arsip skema MySQL sumber dan tidak perlu dijalankan pada Neon.
 

@@ -6,6 +6,14 @@ import { PRETEST_HIGH_BOUNDARY, PRETEST_LOW_BOUNDARY } from "@/lib/constants";
 import type { UserRow } from "@/lib/types";
 
 function validKind(value:string):value is "pretest"|"posttest"{return value==="pretest"||value==="posttest"}
+async function deadlineFor(userId:number,kind:"pretest"|"posttest") {
+  try {
+    const [existing]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("SELECT deadline_pada FROM evaluation_attempts WHERE user_id=? AND jenis=?",[userId,kind]);
+    if(existing)return existing.deadline_pada;
+    const [created]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("INSERT INTO evaluation_attempts(user_id,jenis,deadline_pada) VALUES(?,?,CURRENT_TIMESTAMP + INTERVAL '60 minutes') ON CONFLICT(user_id,jenis) DO UPDATE SET jenis=EXCLUDED.jenis RETURNING deadline_pada",[userId,kind]);
+    return created?.deadline_pada??null;
+  }catch{return null;}
+}
 
 export async function GET(_:Request,{params}:{params:Promise<{kind:string}>}){
   const user=await getSession(); if(!user||user.role!=="siswa")return NextResponse.json({error:"Silakan masuk sebagai siswa."},{status:401});
@@ -20,7 +28,8 @@ export async function GET(_:Request,{params}:{params:Promise<{kind:string}>}){
   }
   const questions=await evaluationQuestions(user.id,kind);
   if(questions.length<25)return NextResponse.json({error:`Bank ${kind} belum memiliki 25 soal aktif dengan komposisi yang diperlukan.`},{status:503});
-  return NextResponse.json({completed:false,questions:questions.map(({jawaban_benar,pembahasan,_option_order,...q})=>({
+  const deadlineAt=await deadlineFor(user.id,kind);
+  return NextResponse.json({completed:false,deadlineAt,questions:questions.map(({jawaban_benar,pembahasan,_option_order,...q})=>({
     ...q,
     options:(_option_order??[]).map((key)=>({value:key,text:q[`pilihan_${key}`]})),
   }))});
@@ -45,6 +54,8 @@ export async function POST(request:Request,{params}:{params:Promise<{kind:string
     const score=Math.round(correct/questions.length*100);
     if(kind==="pretest"){const group=score<PRETEST_LOW_BOUNDARY?"rendah":score<=PRETEST_HIGH_BOUNDARY?"sedang":"tinggi";await connection.execute("UPDATE users SET kelompok=?,pretest_selesai=1 WHERE id=?",[group,user.id]);}
     else await connection.execute("UPDATE users SET posttest_selesai=1 WHERE id=?",[user.id]);
+    await connection.execute("DELETE FROM draft_jawaban_evaluasi WHERE user_id=? AND attempt_key=? AND jenis=?",[user.id,`assessment-v1:${kind}:user:${user.id}`,kind]).catch(() => undefined);
+    await connection.execute("DELETE FROM evaluation_attempts WHERE user_id=? AND jenis=?",[user.id,kind]).catch(() => undefined);
   });
   return NextResponse.json({ok:true,correct,total:questions.length,score:Math.round(correct/questions.length*100)});
 }

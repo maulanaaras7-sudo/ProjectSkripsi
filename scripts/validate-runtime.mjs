@@ -34,12 +34,20 @@ const pretestResult = await json(response, "submit pretest");
 
 response = await fetch(`${base}/api/training`, { headers: { cookie } });
 const training = await json(response, "get training");
-const trainingAnswers = Object.fromEntries(training.questions.map((question) => [String(question.id), "a"]));
+if (training.session) throw new Error("GET latihan tidak boleh membuat sesi baru.");
 
 response = await fetch(`${base}/api/training`, {
   method: "POST",
   headers: { cookie, "content-type": "application/json" },
-  body: JSON.stringify({ sessionId: training.session.id, answers: trainingAnswers }),
+  body: JSON.stringify({ action: "start" }),
+});
+const startedTraining = await json(response, "start training");
+const trainingAnswers = Object.fromEntries(startedTraining.questions.map((question) => [String(question.id), "a"]));
+
+response = await fetch(`${base}/api/training`, {
+  method: "POST",
+  headers: { cookie, "content-type": "application/json" },
+  body: JSON.stringify({ action: "submit", sessionId: startedTraining.session.id, answers: trainingAnswers }),
 });
 const trainingResult = await json(response, "submit training");
 
@@ -47,6 +55,6 @@ console.log(JSON.stringify({
   registration: 201,
   pretestQuestions: pretest.questions.length,
   pretestScore: pretestResult.score,
-  trainingQuestions: training.questions.length,
+  trainingQuestions: startedTraining.questions.length,
   trainingResult,
 }, null, 2));

@@ -66,3 +66,29 @@ table.data-table { width: 100%; border-collapse: collapse; background: #fff; }
 .nav-user { gap: 9px; }
 .nav-name { max-width: 150px; overflow: hidden; color: var(--ink-soft); font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 980px) { .site-header > .nav-wrap { grid-template-columns: auto 1fr; } .site-header .site-nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; } }
+
+/* Alur belajar: status yang mudah dipindai dan aman digunakan pada layar kecil. */
+.dashboard-section { margin-top: 28px; }
+.dashboard-section h2 { margin-top: 0; }
+.journey-grid .content-card { display: flex; flex-direction: column; align-items: flex-start; }
+.journey-grid .hero-actions { margin-top: auto; }
+.level-card { position: relative; overflow: hidden; }
+.level-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: #aab8d0; }
+.level-card.status-berjalan::before { background: var(--curve-f, #2f5dbb); }
+.level-card.status-lulus::before, .level-card.status-selesai_latihan::before { background: var(--accent2, #1f8a6e); }
+.level-card.status-batas_sesi_habis::before { background: var(--accent, #b36b19); }
+.level-card strong { font-size: 1.05rem; text-transform: capitalize; }
+.question-number { color: var(--ink-soft, #64748b); font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.question-text { margin: 10px 0 0; font-size: 1.02rem; line-height: 1.7; }
+.result-pill { display: inline-flex; padding: 4px 8px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+.result-pill.is-correct { color: #0c3b2e; background: #e1f5ee; }
+.result-pill.is-wrong { color: #9f1239; background: #fff1f2; }
+.question-option.is-correct { border-color: var(--accent2, #1f8a6e); background: #e1f5ee; }
+.question-option.is-wrong { border-color: #be123c; background: #fff1f2; }
+.score-display { display: block; margin-top: auto; padding-top: 18px; color: var(--curve-f, #2f5dbb); font-family: "Fraunces", serif; font-size: 2.4rem; line-height: 1; }
+.developer-monogram { display: grid; place-items: center; overflow: visible; color: #fff; font-family: "Fraunces", serif; font-size: 1.7rem; font-weight: 600; letter-spacing: .05em; }
+@media (max-width: 760px) {
+  .dashboard-section { padding: 18px; }
+  .question-card { padding: 18px; }
+  .user-chip { display: none; }
+}

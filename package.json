@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "db:build-seed": "node scripts/build-neon-question-seed.mjs",
+    "db:build-seed": "node scripts/build-neon-question-seed.mjs && node scripts/build-neon-example-seed.mjs",
     "db:apply-neon": "node scripts/apply-neon-schema.mjs"
   },
   "dependencies": {
