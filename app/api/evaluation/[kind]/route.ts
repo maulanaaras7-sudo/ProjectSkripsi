@@ -45,6 +45,10 @@ export async function POST(request:Request,{params}:{params:Promise<{kind:string
     const [progress]=await rows<any[]>("SELECT posttest_diizinkan FROM progres_latihan WHERE user_id=? LIMIT 1",[user.id]);
     if(!progress?.posttest_diizinkan)return NextResponse.json({error:"Selesaikan alur latihan sebelum membuka post-test."},{status:403});
   }
+  try {
+    const [attempt]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("SELECT deadline_pada FROM evaluation_attempts WHERE user_id=? AND jenis=?",[user.id,kind]);
+    if(attempt && Date.now()>new Date(attempt.deadline_pada).getTime()+15_000)return NextResponse.json({error:"Waktu evaluasi telah berakhir. Pengiriman melewati toleransi 15 detik tidak dapat dinilai."},{status:409});
+  } catch { /* Deployment lama tanpa tabel attempt tetap dapat menyelesaikan evaluasi. */ }
   const payload=await request.json().catch(()=>null) as {answers?:Record<string,string>}|null; const answers=payload?.answers??{};
   const questions=await evaluationQuestions(user.id,kind); if(questions.length<25)return NextResponse.json({error:"Paket soal tidak lengkap."},{status:503});
   let correct=0;

@@ -17,9 +17,15 @@ const registration = await fetch(`${base}/api/auth/register`, {
     konfirmasi: "UjiNeon123!",
   }),
 });
-const cookie = (registration.headers.get("set-cookie") ?? "").split(";")[0];
 await json(registration, "register");
-if (!cookie) throw new Error("Cookie sesi tidak diterima setelah registrasi.");
+const login = await fetch(`${base}/api/auth/login`, {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ email, password: "UjiNeon123!" }),
+});
+const cookie = (login.headers.get("set-cookie") ?? "").split(";")[0];
+await json(login, "login");
+if (!cookie) throw new Error("Cookie sesi tidak diterima setelah login.");
 
 let response = await fetch(`${base}/api/evaluation/pretest`, { headers: { cookie } });
 const pretest = await json(response, "get pretest");

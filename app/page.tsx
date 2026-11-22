@@ -7,7 +7,7 @@ export default async function HomePage() {
   const dashboard = user?.role === "guru" ? "/dashboard/guru" : "/dashboard/siswa";
   const primaryHref = user ? dashboard : "/register";
   const primaryLabel = user?.role === "guru" ? "Buka dashboard guru" : user ? "Lanjutkan belajar" : "Mulai belajar";
-  return <LegacyHome primaryHref={primaryHref} primaryLabel={primaryLabel} />;
+  return <LegacyHome primaryHref={primaryHref} primaryLabel={primaryLabel} userRole={user?.role} />;
   return (
     <>
       <section className="hero">

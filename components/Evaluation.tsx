@@ -73,7 +73,7 @@ export function Evaluation({ kind }: { kind: "pretest" | "posttest" }) {
     event.preventDefault();
     if (submitting) return;
     const unanswered = questions.length - Object.keys(answers).length;
-    if (unanswered && !window.confirm(`${unanswered} soal belum dijawab dan akan dihitung salah. Tetap kumpulkan?`)) return;
+    if (unanswered) { setMessage("Semua soal wajib dijawab sebelum evaluasi dikirim."); return; }
     await send();
   }
 

@@ -3,26 +3,27 @@ import { requireUser } from "@/lib/auth";
 import { rows } from "@/lib/db";
 import { levelLabel } from "@/lib/constants";
 
-interface UserStatus extends Record<string, unknown> { kelompok: string | null; pretest_selesai: number; posttest_selesai: number }
-interface Score extends Record<string, unknown> { jenis: string; benar: number; total: number; skor: number }
-interface Session extends Record<string, unknown> { jumlah_benar: number; jumlah_soal: number; persentase: number; status: string }
+interface Result extends Record<string, unknown> { nama: string; kelompok: string | null; pretest_selesai: number; posttest_selesai: number; tingkat_saat_ini: string | null; selesai_latihan: number; alasan_selesai: string | null; sesi_rendah: number; sesi_sedang: number; sesi_tinggi: number; skor_sesi: string | null; pre_benar: number | null; pre_total: number; post_benar: number | null; post_total: number; }
+function completion(row: Result) { return row.selesai_latihan ? row.alasan_selesai === "batas_sesi_habis" ? "Batas sesi tercapai" : "Tuntas" : row.tingkat_saat_ini ? `Tingkat ${levelLabel(row.tingkat_saat_ini)}` : "Belum dimulai"; }
+function reason(row: Result) { return row.alasan_selesai === "batas_sesi_habis" ? "Batas maksimal sesi pada tingkat aktif" : row.alasan_selesai === "lulus_tingkat_tinggi" ? "Lulus tingkat tinggi" : "—"; }
 
 export default async function LearningResultsPage() {
   const user = await requireUser("siswa");
-  const [[status], scores, sessions] = await Promise.all([
-    rows<UserStatus[]>("SELECT kelompok,pretest_selesai,posttest_selesai FROM users WHERE id=?", [user.id]),
-    rows<Score[]>(`SELECT s.jenis,SUM(js.benar) benar,COUNT(*) total,ROUND(SUM(js.benar)::numeric / COUNT(*) * 100) skor FROM jawaban_siswa js JOIN soal s ON s.id=js.soal_id WHERE js.user_id=? AND s.jenis IN ('pretest','posttest') GROUP BY s.jenis`, [user.id]),
-    rows<Session[]>("SELECT jumlah_benar,jumlah_soal,persentase,status FROM riwayat_sesi_latihan WHERE user_id=? AND status<>'aktif' ORDER BY id", [user.id]),
-  ]);
-  const score = Object.fromEntries(scores.map((item) => [item.jenis, item]));
-  const change = score.pretest && score.posttest ? score.posttest.skor - score.pretest.skor : null;
-  const nGain = score.pretest && score.posttest && score.pretest.skor < 100 ? (score.posttest.skor - score.pretest.skor) / (100 - score.pretest.skor) : null;
-  const nGainCategory = nGain === null ? "—" : nGain >= .7 ? "Tinggi" : nGain >= .3 ? "Sedang" : "Rendah";
-  const averageTraining = sessions.length ? Math.round(sessions.reduce((sum, item) => sum + Number(item.persentase), 0) / sessions.length) : null;
-  return <>
-    <section className="dashboard-welcome"><div><span className="eyebrow">Hasil belajar</span><h1>Perkembangan {user.nama}</h1><p>Ringkasan ini membantu Anda melihat perubahan dari evaluasi awal hingga akhir.</p></div><Link className="btn-ghost" href="/dashboard/siswa">Kembali ke dashboard</Link></section>
-    <section className="stats-grid"><article className="stat-card"><span>Kelompok awal</span><strong>{levelLabel(status?.kelompok ?? null)}</strong></article><article className="stat-card"><span>Nilai pre-test</span><strong>{score.pretest?.skor ?? "—"}</strong></article><article className="stat-card"><span>Nilai post-test</span><strong>{score.posttest?.skor ?? "—"}</strong></article><article className="stat-card"><span>Perubahan</span><strong>{change === null ? "—" : `${change > 0 ? "+" : ""}${change}`}</strong></article><article className="stat-card"><span>N-Gain</span><strong>{nGain === null ? "—" : nGain.toFixed(2)}</strong><small>{nGainCategory}</small></article></section>
-    <section className="card-grid"><article className="content-card"><span className="eyebrow">Evaluasi awal</span><h2>Pre-test</h2><p>{score.pretest ? `${score.pretest.benar} dari ${score.pretest.total} jawaban benar.` : "Pre-test belum dikerjakan."}</p><span className="score-display">{score.pretest?.skor ?? "—"}</span></article><article className="content-card"><span className="eyebrow">Proses belajar</span><h2>Latihan adaptif</h2><p>{sessions.length ? `${sessions.length} sesi telah diselesaikan dengan rata-rata ${averageTraining}%.` : "Belum ada sesi latihan yang selesai."}</p><span className="score-display">{sessions.length}</span></article><article className="content-card"><span className="eyebrow">Evaluasi akhir</span><h2>Post-test</h2><p>{score.posttest ? `${score.posttest.benar} dari ${score.posttest.total} jawaban benar.` : "Post-test belum dikerjakan atau belum terbuka."}</p><span className="score-display">{score.posttest?.skor ?? "—"}</span></article></section>
-    {!status?.posttest_selesai && <section className="panel dashboard-section"><h2>Langkah berikutnya</h2><p>{status?.pretest_selesai ? "Lanjutkan latihan sampai post-test terbuka." : "Mulai dari pre-test agar sistem dapat menentukan tingkat latihan yang tepat."}</p><Link className="btn-primary" href={status?.pretest_selesai ? "/latihan" : "/pretest"}>{status?.pretest_selesai ? "Lanjutkan latihan" : "Mulai pre-test"}</Link></section>}
-  </>;
+  const [row] = await rows<Result[]>(`SELECT u.nama,u.kelompok,u.pretest_selesai,u.posttest_selesai,p.tingkat_saat_ini,p.selesai_latihan,p.alasan_selesai,
+    (SELECT COUNT(*) FROM riwayat_sesi_latihan r WHERE r.user_id=u.id AND r.tingkat='rendah' AND r.status<>'aktif') sesi_rendah,
+    (SELECT COUNT(*) FROM riwayat_sesi_latihan r WHERE r.user_id=u.id AND r.tingkat='sedang' AND r.status<>'aktif') sesi_sedang,
+    (SELECT COUNT(*) FROM riwayat_sesi_latihan r WHERE r.user_id=u.id AND r.tingkat='tinggi' AND r.status<>'aktif') sesi_tinggi,
+    (SELECT string_agg(r.tingkat || ' S' || r.nomor_sesi || ': ' || ROUND(r.persentase)::text || '%', ' | ' ORDER BY r.id) FROM riwayat_sesi_latihan r WHERE r.user_id=u.id AND r.status<>'aktif') skor_sesi,
+    SUM(CASE WHEN s.jenis='pretest' THEN js.benar ELSE 0 END)::int pre_benar,COUNT(*) FILTER (WHERE s.jenis='pretest')::int pre_total,
+    SUM(CASE WHEN s.jenis='posttest' THEN js.benar ELSE 0 END)::int post_benar,COUNT(*) FILTER (WHERE s.jenis='posttest')::int post_total
+    FROM users u LEFT JOIN progres_latihan p ON p.user_id=u.id LEFT JOIN jawaban_siswa js ON js.user_id=u.id LEFT JOIN soal s ON s.id=js.soal_id WHERE u.id=?
+    GROUP BY u.id,p.tingkat_saat_ini,p.selesai_latihan,p.alasan_selesai`, [user.id]);
+  if (!row) return <div className="panel"><p>Data hasil belajar belum tersedia.</p></div>;
+  const pre = row.pre_total ? Math.round(Number(row.pre_benar ?? 0) / row.pre_total * 100) : 0;
+  const post = row.post_total ? Math.round(Number(row.post_benar ?? 0) / row.post_total * 100) : 0;
+  const change = row.posttest_selesai ? post - pre : null;
+  const gain = row.posttest_selesai && pre < 100 ? (post - pre) / (100 - pre) : null;
+  const category = gain === null ? "—" : gain >= .7 ? "Tinggi" : gain >= .3 ? "Sedang" : "Rendah";
+  const next = !row.pretest_selesai ? ["/pretest", "Mulai pre-test"] : !row.posttest_selesai ? ["/latihan", "Lanjutkan latihan"] : ["/dashboard/siswa", "Kembali ke ringkasan"];
+  return <><section className="dashboard-welcome"><div><span className="eyebrow">Hasil belajar</span><h1>Perkembangan Hasil Belajar Saya</h1><p>Bandingkan evaluasi awal, proses latihan, dan evaluasi akhir Anda.</p></div><Link className="btn-ghost" href="/dashboard/siswa">Ringkasan</Link></section><section className="panel comparison-panel"><div className="panel-head"><span>Perbandingan skor (%)</span></div><div className="comparison-chart"><div className="comparison-row"><div className="comparison-name">{row.nama}</div><div className="comparison-bars"><div className="score-bar pre" style={{ width: `${pre}%` }}>Pre {pre}%</div><div className="score-bar post" style={{ width: `${post}%` }}>Post {post}%</div></div></div></div></section><div className="table-wrap"><table className="data-table training-report-table"><thead><tr><th>Kategori pre-test</th><th>Latihan</th><th>Sesi R/S/T</th><th>Skor tiap sesi</th><th>Alasan lanjut</th><th>Pre-test</th><th>Post-test</th><th>Selisih</th><th>N-Gain</th><th>Kategori</th></tr></thead><tbody><tr><td>{levelLabel(row.kelompok)}</td><td>{completion(row)}</td><td>{row.sesi_rendah}/{row.sesi_sedang}/{row.sesi_tinggi}</td><td>{row.skor_sesi ?? "—"}</td><td>{reason(row)}</td><td>{row.pretest_selesai ? `${row.pre_benar}/${row.pre_total} (${pre}%)` : "Belum selesai"}</td><td>{row.posttest_selesai ? `${row.post_benar}/${row.post_total} (${post}%)` : "Belum selesai"}</td><td>{change === null ? "—" : `${change >= 0 ? "+" : ""}${change} poin`}</td><td>{gain === null ? "—" : gain.toFixed(2)}</td><td>{category}</td></tr></tbody></table></div><section className="guide-bottom-action"><div><strong>{row.posttest_selesai ? "Evaluasi telah lengkap" : "Langkah berikutnya"}</strong><span>{row.posttest_selesai ? "Gunakan hasil ini untuk meninjau kembali materi yang perlu diperkuat." : "Selesaikan tahapan belajar secara berurutan."}</span></div><Link className="btn-primary" href={next[0]}>{next[1]}</Link></section></>;
 }
