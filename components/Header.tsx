@@ -11,6 +11,7 @@ export async function Header() {
           <span>Fungsiverse</span>
         </Link>
         <nav className="site-nav" aria-label="Navigasi utama">
+          {!user && <Link href="/">Beranda</Link>}
           <Link href="/materi">Materi</Link>
           <Link href="/visualisasi">Visualisasi</Link>
           {user?.role === "siswa" && <Link href="/dashboard/siswa">Dashboard</Link>}
@@ -25,7 +26,7 @@ export async function Header() {
               </form>
             </>
           ) : (
-            <Link className="btn-small" href="/login">Masuk</Link>
+            <><Link className="btn-small" href="/login">Masuk</Link><Link className="pill" href="/register">Daftar</Link></>
           )}
         </div>
       </div>

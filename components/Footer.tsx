@@ -1,10 +1,5 @@
 export function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="footer-inner">
-        <strong>Fungsiverse</strong>
-        <span>Media pembelajaran fungsi komposisi dan invers.</span>
-      </div>
-    </footer>
+    <footer><strong>Fungsiverse</strong> &mdash; Media pembelajaran interaktif fungsi komposisi dan invers.</footer>
   );
 }
