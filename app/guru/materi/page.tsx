@@ -1,0 +1,2 @@
+import { requireUser } from "@/lib/auth";import { rows } from "@/lib/db";import type { MaterialRow } from "@/lib/types";import { MaterialManager } from "@/components/MaterialManager";
+export default async function ManageMaterials(){await requireUser("guru");const materials=await rows<MaterialRow[]>("SELECT id,judul,urutan,konten FROM materi ORDER BY urutan,id");return <><span className="eyebrow">Administrasi</span><h1>Kelola Materi</h1><MaterialManager materials={materials.map(m=>({id:m.id,judul:m.judul,urutan:m.urutan,konten:m.konten}))}/></>}

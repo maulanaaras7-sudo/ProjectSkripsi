@@ -1,0 +1,3 @@
+import { requireUser } from "@/lib/auth";import { rows } from "@/lib/db";import type { QuestionRow } from "@/lib/types";import { QuestionManager } from "@/components/QuestionManager";
+interface AdminQuestion extends QuestionRow{aktif:number}
+export default async function ManageQuestions(){await requireUser("guru");const questions=await rows<AdminQuestion[]>("SELECT id,jenis,tingkat_kesulitan,pertanyaan,pilihan_a,pilihan_b,pilihan_c,pilihan_d,pilihan_e,jawaban_benar,pembahasan,aktif FROM soal ORDER BY aktif DESC,id DESC LIMIT 200");return <><span className="eyebrow">Administrasi</span><h1>Kelola Bank Soal</h1><p>Menampilkan 200 soal terbaru.</p><QuestionManager questions={questions.map(q=>({...q}))}/></>}
