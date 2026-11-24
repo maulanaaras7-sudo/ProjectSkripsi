@@ -39,6 +39,11 @@ const defaults: Record<SimulationModuleId, { preset: string; x: number }> = {
 };
 const formatNumber = (value: number) => new Intl.NumberFormat("id-ID", { maximumFractionDigits: 2 }).format(value);
 const formatRupiah = (value: number) => `Rp${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(value)}`;
+function sliderBounds(moduleId: SimulationModuleId) {
+  if (moduleId === "SIM-01") return { min: -2, max: 2, step: 1 };
+  if (moduleId === "SIM-08") return { min: 50000, max: 200000, step: 5000 };
+  return { min: 0, max: 6, step: 1 };
+}
 
 export function GeoGebraVisualization() {
   const [moduleId, setModuleId] = useState<SimulationModuleId>("SIM-01");
@@ -47,6 +52,7 @@ export function GeoGebraVisualization() {
   const [status, setStatus] = useState("Memuat GeoGebra…");
   const rootRef = useRef<HTMLDivElement>(null); const apiRef = useRef<GeoGebraApi | null>(null); const generationRef = useRef(0);
   const active = modules.find((item) => item.id === moduleId)!;
+  const slider = sliderBounds(moduleId);
   const selectModule = (id: SimulationModuleId) => { const initial = defaults[id]; setModuleId(id); setPreset(initial.preset); setX(initial.x); };
   const reset = () => { const initial = defaults[moduleId]; setPreset(initial.preset); setX(initial.x); };
 
@@ -78,7 +84,7 @@ export function GeoGebraVisualization() {
     <div className="simulation-module-tabs" role="tablist" aria-label="Modul simulasi">{modules.map((item) => <button key={item.id} type="button" role="tab" aria-selected={moduleId === item.id} className={moduleId === item.id ? "active" : ""} onClick={() => selectModule(item.id)}><small>{item.id}</small>{item.title}</button>)}</div>
     <div className="simulation-workspace"><aside className="algebra-card simulation-controls"><p className="simulation-kicker">{active.id}</p><h3>{active.title}</h3><p className="control-summary">{active.short}</p>
       <label className="field"><span>Preset aman</span><select value={preset} onChange={(event) => setPreset(event.target.value)}>{active.presets.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-      <label className="field"><span>{moduleId === "SIM-08" ? "Harga awal (Rp)" : moduleId === "SIM-05" ? "Nilai keluaran y" : "Nilai x"}</span><input type="range" min={moduleId === "SIM-08" ? 50000 : 0} max={moduleId === "SIM-08" ? 200000 : 6} step={moduleId === "SIM-08" ? 5000 : 1} value={x} onChange={(event) => setX(Number(event.target.value))} /><output>{moduleId === "SIM-08" ? formatRupiah(x) : x}</output></label>
+      <label className="field"><span>{moduleId === "SIM-08" ? "Harga awal (Rp)" : moduleId === "SIM-05" ? "Nilai keluaran y" : "Nilai x"}</span><input type="range" min={slider.min} max={slider.max} step={slider.step} value={x} onChange={(event) => setX(Number(event.target.value))} /><output>{moduleId === "SIM-08" ? formatRupiah(x) : x}</output></label>
       {resultPanel(moduleId, x, preset)}<button type="button" className="btn-ghost" onClick={reset}>Atur ulang modul</button></aside>
       <div className="geogebra-wrap simulation-graph"><div ref={rootRef} className="geogebra-applet" aria-label={`Grafik GeoGebra ${active.title}`} /><p className="geogebra-status" role="status" aria-live="polite">{status}</p><div className="graph-guide"><p className="simulation-kicker">Pertanyaan refleksi</p><h3>{active.question}</h3><p><strong>Pembahasan:</strong> {active.discussion}</p></div></div>
     </div>

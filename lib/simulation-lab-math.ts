@@ -80,19 +80,20 @@ export function contextualFunction(price: number, discount = 0.2, fee = 5000) {
 export function graphCommands(moduleId: SimulationModuleId, x: number, preset: string): string[] {
   const safeX = Number.isFinite(x) ? x : 0;
   switch (moduleId) {
-    case "SIM-01": return ["f(x)=x^2", "A=(-2,4)", "B=(-1,1)", "C=(0,0)", "D=(1,1)", "E=(2,4)"];
+    case "SIM-01": return ["f(x)=x^2", "A=(-2,4)", "B=(-1,1)", "C=(0,0)", "D=(1,1)", "E=(2,4)", `P=(${safeX},${safeX * safeX})`];
     case "SIM-02": return ["f(x)=2x+1", "g(x)=x-2", `P=(${safeX},${2 * safeX + 1})`, `Q=(${safeX},${safeX - 2})`];
     case "SIM-03": return ["f(x)=2x+1", "g(x)=x+3", "h(x)=f(g(x))", `P=(${safeX},${2 * safeX + 7})`];
     case "SIM-04":
-      if (preset === "commutative") return ["f(x)=x+1", "g(x)=x+2", "h(x)=f(g(x))"];
-      if (preset === "identity") return ["f(x)=2x+1", "I(x)=x", "h(x)=f(I(x))"];
-      return ["f(x)=2x+1", "g(x)=x^2", "h(x)=f(g(x))", "k(x)=g(f(x))"];
+      if (preset === "commutative") return ["f(x)=x+1", "g(x)=x+2", "h(x)=f(g(x))", `P=(${safeX},${safeX + 3})`];
+      if (preset === "associative") return ["f(x)=2x", "g(x)=x+1", "r(x)=x-3", "u(x)=f(g(r(x)))", `P=(${safeX},${2 * safeX - 4})`];
+      if (preset === "identity") return ["f(x)=2x+1", "I(x)=x", "h(x)=f(I(x))", `P=(${safeX},${2 * safeX + 1})`];
+      return ["f(x)=2x+1", "g(x)=x^2", "h(x)=f(g(x))", "k(x)=g(f(x))", `P=(${safeX},${2 * safeX * safeX + 1})`, `Q=(${safeX},${(2 * safeX + 1) ** 2})`];
     case "SIM-05":
-      if (preset === "nonpositive") return ["f(x)=If(x<=0,x^2)", "g(x)=-sqrt(x)"];
-      if (preset === "nonnegative") return ["f(x)=If(x>=0,x^2)", "g(x)=sqrt(x)"];
-      return ["f(x)=x^2"];
+      if (preset === "nonpositive") return ["f(x)=If(x<=0,x^2)", "g(x)=-sqrt(x)", `P=(${-Math.sqrt(safeX)},${safeX})`, `Q=(${safeX},${-Math.sqrt(safeX)})`];
+      if (preset === "nonnegative") return ["f(x)=If(x>=0,x^2)", "g(x)=sqrt(x)", `P=(${Math.sqrt(safeX)},${safeX})`, `Q=(${safeX},${Math.sqrt(safeX)})`];
+      return ["f(x)=x^2", `P=(${Math.sqrt(safeX)},${safeX})`, `Q=(${-Math.sqrt(safeX)},${safeX})`];
     case "SIM-06": return ["f(x)=2x+3", "i(x)=x", `P=(${safeX},${2 * safeX + 3})`, `Q=(${2 * safeX + 3},${safeX})`];
-    case "SIM-07": return ["f(x)=2x+3", "g(x)=x+2", "h(x)=f(g(x))", "k(x)=(x-7)/2"];
-    case "SIM-08": return ["f(x)=0.8x+5000", "g(x)=(x-5000)/0.8", `P=(${safeX},${0.8 * safeX + 5000})`];
+    case "SIM-07": return ["f(x)=2x+3", "g(x)=x+2", "h(x)=f(g(x))", "k(x)=(x-7)/2", `P=(${safeX},${2 * safeX + 7})`, `Q=(${2 * safeX + 7},${safeX})`];
+    case "SIM-08": return ["f(x)=0.8x+5000", "g(x)=(x-5000)/0.8", `P=(${safeX},${0.8 * safeX + 5000})`, `Q=(${0.8 * safeX + 5000},${safeX})`];
   }
 }
