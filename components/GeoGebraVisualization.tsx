@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FunctionExplorationLab } from "@/components/FunctionExplorationLab";
 import {
   type CompositionProperty, type InverseDomain, type SimulationModuleId,
   compositionProperty, compositionValues, contextualFunction, graphCommands,
@@ -41,16 +42,18 @@ const formatNumber = (value: number) => new Intl.NumberFormat("id-ID", { maximum
 const formatRupiah = (value: number) => `Rp${new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(value)}`;
 
 export function GeoGebraVisualization() {
+  const [showExploration, setShowExploration] = useState(false);
   const [moduleId, setModuleId] = useState<SimulationModuleId>("SIM-01");
   const [preset, setPreset] = useState(defaults["SIM-01"].preset);
   const [x, setX] = useState(defaults["SIM-01"].x);
   const [status, setStatus] = useState("Memuat GeoGebra…");
   const rootRef = useRef<HTMLDivElement>(null); const apiRef = useRef<GeoGebraApi | null>(null); const generationRef = useRef(0);
   const active = modules.find((item) => item.id === moduleId)!;
-  const selectModule = (id: SimulationModuleId) => { const initial = defaults[id]; setModuleId(id); setPreset(initial.preset); setX(initial.x); };
+  const selectModule = (id: SimulationModuleId) => { const initial = defaults[id]; setShowExploration(false); setModuleId(id); setPreset(initial.preset); setX(initial.x); };
   const reset = () => { const initial = defaults[moduleId]; setPreset(initial.preset); setX(initial.x); };
 
   useEffect(() => {
+    if (showExploration) return;
     const root = rootRef.current; if (!root) return;
     let disposed = false; const generation = ++generationRef.current; const target = document.createElement("div"); target.id = `geogebra-simulation-${generation}`; root.replaceChildren(target); setStatus("Memuat applet GeoGebra…");
     const inject = async () => {
@@ -65,24 +68,25 @@ export function GeoGebraVisualization() {
     return () => { disposed = true; apiRef.current?.remove?.(); apiRef.current = null; target.replaceChildren(); };
     // A module/preset replacement deliberately disposes all previous graph objects.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [moduleId, preset]);
-  useEffect(() => { if (apiRef.current) applyGraph(apiRef.current, moduleId, x, preset); }, [moduleId, preset, x]);
+  }, [moduleId, preset, showExploration]);
+  useEffect(() => { if (!showExploration && apiRef.current) applyGraph(apiRef.current, moduleId, x, preset); }, [moduleId, preset, showExploration, x]);
   useEffect(() => {
+    if (showExploration) return;
     const root = rootRef.current; if (!root || !window.ResizeObserver) return;
     const observer = new ResizeObserver(() => { const api = apiRef.current; if (!api?.setSize) return; const width = Math.max(280, Math.floor(root.getBoundingClientRect().width)); api.setSize(width, Math.max(360, Math.min(480, Math.round(width * 0.7)))); });
     observer.observe(root); return () => observer.disconnect();
-  }, []);
+  }, [showExploration]);
 
   return <section className="simulation-lab" aria-label="GeoGebra Simulation Lab">
     <div className="simulation-lab-intro"><p className="simulation-kicker">Delapan modul interaktif</p><h2>Eksplorasi fungsi dengan GeoGebra</h2><p>Pilih satu modul, ubah kontrol yang relevan, lalu bandingkan hasil aljabar dengan grafik nyata.</p></div>
-    <div className="simulation-module-tabs" role="tablist" aria-label="Modul simulasi">{modules.map((item) => <button key={item.id} type="button" role="tab" aria-selected={moduleId === item.id} className={moduleId === item.id ? "active" : ""} onClick={() => selectModule(item.id)}><small>{item.id}</small>{item.title}</button>)}</div>
-    <div className="simulation-workspace">
+    <div className="simulation-module-tabs" role="tablist" aria-label="Modul simulasi">{modules.map((item) => <button key={item.id} type="button" role="tab" aria-selected={!showExploration && moduleId === item.id} className={!showExploration && moduleId === item.id ? "active" : ""} onClick={() => selectModule(item.id)}><small>{item.id}</small>{item.title}</button>)}<button type="button" role="tab" aria-selected={showExploration} className={showExploration ? "active exploration-tab" : "exploration-tab"} onClick={() => setShowExploration(true)}><small>LAB</small>Lab Eksplorasi</button></div>
+    {showExploration ? <FunctionExplorationLab /> : <div className="simulation-workspace">
       {moduleId === "SIM-01" ? <Sim01Controls x={x} onChange={setX} onReset={reset} /> : moduleId === "SIM-02" ? <Sim02Controls x={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} /> : moduleId === "SIM-03" ? <Sim03Controls x={x} onChange={setX} onReset={reset} /> : moduleId === "SIM-04" ? <Sim04Controls x={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} /> : moduleId === "SIM-05" ? <Sim05Controls b={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} /> : moduleId === "SIM-06" ? <Sim06Controls x={x} onChange={setX} onReset={reset} /> : moduleId === "SIM-07" ? <Sim07Controls output={x} onChange={setX} onReset={reset} /> : <Sim08Controls priceThousands={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} />}
       <div className="geogebra-wrap simulation-graph">
         <div className="simulation-graph-heading"><div><p className="simulation-kicker">Grafik GeoGebra</p><h2>Grafik yang berubah otomatis</h2></div><span className={status.startsWith("Applet") ? "geo-status-badge ready" : "geo-status-badge"}>{status.startsWith("Applet") ? "GeoGebra aktif" : "Memuat GeoGebra"}</span></div>
         <div ref={rootRef} className="geogebra-applet" aria-label={`Grafik GeoGebra ${active.title}`} /><p className="geogebra-status" role="status" aria-live="polite">{status}</p><div className="graph-guide"><p className="simulation-kicker">Pertanyaan refleksi</p><h3>{active.question}</h3><p><strong>Pembahasan:</strong> {active.discussion}</p></div>
       </div>
-    </div>
+    </div>}
   </section>;
 }
 
