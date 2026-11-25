@@ -52,6 +52,11 @@ function renderLabGraph(api: LabApi, config: GraphConfig) {
 
 const tabs = ["Penjelasan", "Keterkaitan", "Contoh", "Latihan Cepat"] as const;
 type LearningTab = (typeof tabs)[number];
+function graphHeight(width: number) {
+  if (width < 480) return 390;
+  if (width < 650) return 460;
+  return Math.max(520, Math.min(610, Math.round(width * .82)));
+}
 
 export function FunctionExplorationLab() {
   const [draftF, setDraftF] = useState("2x+1"); const [draftG, setDraftG] = useState("x-3");
@@ -78,11 +83,11 @@ export function FunctionExplorationLab() {
     let disposed = false; const target = document.createElement("div"); target.id = `function-exploration-ggb-${retryKey}`; root.replaceChildren(target); setStatus("Memuat GeoGebra…");
     void loadLabApi().then(() => {
       if (disposed || !window.GGBApplet) return;
-      const width = Math.max(300, Math.floor(root.getBoundingClientRect().width || 620));
-      const applet = new window.GGBApplet({ appName: "graphing", width, height: 470, perspective: "G", showToolBar: false, showAlgebraInput: false, showMenuBar: false, showResetIcon: false, showFullscreenButton: false, enableShiftDragZoom: true, language: "id", appletOnLoad: (api: LabApi) => { if (disposed) { api.remove?.(); return; } apiRef.current = api; api.setPerspective?.("G"); api.setCoordSystem?.(-5, 5, -5, 5); renderLabGraph(api, graphConfig.current); setStatus("GeoGebra aktif"); setReadyVersion((value) => value + 1); } }, true);
+      const width = Math.max(300, Math.floor(root.getBoundingClientRect().width || 680));
+      const applet = new window.GGBApplet({ appName: "graphing", width, height: graphHeight(width), perspective: "G", showToolBar: false, showAlgebraInput: false, showMenuBar: false, showResetIcon: false, showFullscreenButton: false, enableShiftDragZoom: true, language: "id", appletOnLoad: (api: LabApi) => { if (disposed) { api.remove?.(); return; } apiRef.current = api; api.setPerspective?.("G"); api.setCoordSystem?.(-5, 5, -5, 5); renderLabGraph(api, graphConfig.current); setStatus("GeoGebra aktif"); setReadyVersion((value) => value + 1); } }, true);
       applet.inject(target.id);
     }).catch(() => { if (!disposed) setStatus("GeoGebra gagal dimuat. Periksa internet lalu coba lagi."); });
-    const observer = new ResizeObserver(() => { const width = Math.max(300, Math.floor(root.getBoundingClientRect().width)); apiRef.current?.setSize?.(width, width < 600 ? 390 : 470); }); observer.observe(root);
+    const observer = new ResizeObserver(() => { const width = Math.max(300, Math.floor(root.getBoundingClientRect().width)); apiRef.current?.setSize?.(width, graphHeight(width)); }); observer.observe(root);
     return () => { disposed = true; observer.disconnect(); apiRef.current?.remove?.(); apiRef.current = null; target.replaceChildren(); };
   }, [retryKey]);
   useEffect(() => { if (apiRef.current) renderLabGraph(apiRef.current, graphConfig.current); }, [applied, display, mode, order, readyVersion]);

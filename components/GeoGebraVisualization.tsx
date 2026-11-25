@@ -52,6 +52,8 @@ export function GeoGebraVisualization() {
   const selectModule = (id: SimulationModuleId) => { const initial = defaults[id]; setShowExploration(false); setModuleId(id); setPreset(initial.preset); setX(initial.x); };
   const reset = () => { const initial = defaults[moduleId]; setPreset(initial.preset); setX(initial.x); };
 
+  useEffect(() => { if (new URLSearchParams(window.location.search).get("lab") === "1") setShowExploration(true); }, []);
+
   useEffect(() => {
     if (showExploration) return;
     const root = rootRef.current; if (!root) return;
@@ -78,7 +80,7 @@ export function GeoGebraVisualization() {
   }, [showExploration]);
 
   return <section className="simulation-lab" aria-label="GeoGebra Simulation Lab">
-    <div className="simulation-lab-intro"><p className="simulation-kicker">Delapan modul interaktif</p><h2>Eksplorasi fungsi dengan GeoGebra</h2><p>Pilih satu modul, ubah kontrol yang relevan, lalu bandingkan hasil aljabar dengan grafik nyata.</p></div>
+    {!showExploration && <div className="simulation-lab-intro"><p className="simulation-kicker">Delapan modul interaktif</p><h2>Eksplorasi fungsi dengan GeoGebra</h2><p>Pilih satu modul, ubah kontrol yang relevan, lalu bandingkan hasil aljabar dengan grafik nyata.</p></div>}
     <div className="simulation-module-tabs" role="tablist" aria-label="Modul simulasi">{modules.map((item) => <button key={item.id} type="button" role="tab" aria-selected={!showExploration && moduleId === item.id} className={!showExploration && moduleId === item.id ? "active" : ""} onClick={() => selectModule(item.id)}><small>{item.id}</small>{item.title}</button>)}<button type="button" role="tab" aria-selected={showExploration} className={showExploration ? "active exploration-tab" : "exploration-tab"} onClick={() => setShowExploration(true)}><small>LAB</small>Lab Eksplorasi</button></div>
     {showExploration ? <FunctionExplorationLab /> : <div className="simulation-workspace">
       {moduleId === "SIM-01" ? <Sim01Controls x={x} onChange={setX} onReset={reset} /> : moduleId === "SIM-02" ? <Sim02Controls x={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} /> : moduleId === "SIM-03" ? <Sim03Controls x={x} onChange={setX} onReset={reset} /> : moduleId === "SIM-04" ? <Sim04Controls x={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} /> : moduleId === "SIM-05" ? <Sim05Controls b={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} /> : moduleId === "SIM-06" ? <Sim06Controls x={x} onChange={setX} onReset={reset} /> : moduleId === "SIM-07" ? <Sim07Controls output={x} onChange={setX} onReset={reset} /> : <Sim08Controls priceThousands={x} preset={preset} onChange={setX} onPresetChange={setPreset} onReset={reset} />}
