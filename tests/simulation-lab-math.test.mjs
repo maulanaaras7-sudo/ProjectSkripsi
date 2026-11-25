@@ -33,7 +33,7 @@ for (const [name, verify] of cases) {
 }
 console.log(`\n${cases.length} kasus matematika lulus.`);
 
-for (const [moduleId, preset] of [["SIM-01", "square"], ["SIM-02", "linear"], ["SIM-03", "machine"], ["SIM-04", "noncommutative"], ["SIM-05", "nonnegative"], ["SIM-06", "reflection"], ["SIM-07", "inverse-composition"], ["SIM-08", "shopping"]]) {
+for (const [moduleId, preset] of [["SIM-01", "square"], ["SIM-02", "sum"], ["SIM-03", "machine"], ["SIM-04", "noncommutative"], ["SIM-05", "nonnegative"], ["SIM-06", "reflection"], ["SIM-07", "inverse-composition"], ["SIM-08", "20-5"]]) {
   const first = graphCommands(moduleId, 1, preset).join(";");
   const second = graphCommands(moduleId, 2, preset).join(";");
   assert.notEqual(first, second, `${moduleId} harus mengirim perintah grafik berbeda ketika slider berubah`);

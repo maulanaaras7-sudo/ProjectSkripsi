@@ -49,7 +49,7 @@ export function compositionProperty(kind: CompositionProperty, x = 2) {
     return { label: "Identitas", left: f(identity(x)), right: identity(f(x)), conclusion: "f∘I = I∘f = f." };
   }
   const f = (value: number) => 2 * value + 1;
-  const g = (value: number) => value * value;
+  const g = (value: number) => value + 3;
   return { label: "Tidak komutatif", left: f(g(x)), right: g(f(x)), conclusion: "Umumnya f∘g ≠ g∘f." };
 }
 
@@ -80,20 +80,31 @@ export function contextualFunction(price: number, discount = 0.2, fee = 5000) {
 export function graphCommands(moduleId: SimulationModuleId, x: number, preset: string): string[] {
   const safeX = Number.isFinite(x) ? x : 0;
   switch (moduleId) {
-    case "SIM-01": return ["f(x)=x^2", "A=(-2,4)", "B=(-1,1)", "C=(0,0)", "D=(1,1)", "E=(2,4)", `P=(${safeX},${safeX * safeX})`];
-    case "SIM-02": return ["f(x)=2x+1", "g(x)=x-2", `P=(${safeX},${2 * safeX + 1})`, `Q=(${safeX},${safeX - 2})`];
-    case "SIM-03": return ["f(x)=2x+1", "g(x)=x+3", "h(x)=f(g(x))", `P=(${safeX},${2 * safeX + 7})`];
+    case "SIM-01": return [`a=${safeX}`, "f(x)=x^2", "A=(-2,4)", "B=(-1,1)", "C=(0,0)", "D=(1,1)", "E=(2,4)", "P=(a,f(a))"];
+    case "SIM-02": {
+      const operation = preset === "difference" ? "f(x)-g(x)" : preset === "product" ? "f(x)*g(x)" : preset === "quotient" ? "f(x)/g(x)" : "f(x)+g(x)";
+      return [`a=${safeX}`, "f(x)=2x+1", "g(x)=x-2", `h(x)=${operation}`, "P=(a,h(a))"];
+    }
+    case "SIM-03": return [`a=${safeX}`, "f(x)=2x+1", "g(x)=x+3", "h(x)=f(g(x))", "k(x)=g(f(x))", "P=(a,h(a))", "Q=(a,k(a))"];
     case "SIM-04":
-      if (preset === "commutative") return ["f(x)=x+1", "g(x)=x+2", "h(x)=f(g(x))", `P=(${safeX},${safeX + 3})`];
-      if (preset === "associative") return ["f(x)=2x", "g(x)=x+1", "r(x)=x-3", "u(x)=f(g(r(x)))", `P=(${safeX},${2 * safeX - 4})`];
-      if (preset === "identity") return ["f(x)=2x+1", "I(x)=x", "h(x)=f(I(x))", `P=(${safeX},${2 * safeX + 1})`];
-      return ["f(x)=2x+1", "g(x)=x^2", "h(x)=f(g(x))", "k(x)=g(f(x))", `P=(${safeX},${2 * safeX * safeX + 1})`, `Q=(${safeX},${(2 * safeX + 1) ** 2})`];
+      if (preset === "commutative") return [`a=${safeX}`, "f(x)=x+1", "g(x)=x+2", "h(x)=f(g(x))", "k(x)=g(f(x))", "P=(a,h(a))", "Q=(a,k(a))"];
+      if (preset === "associative") return [`a=${safeX}`, "f(x)=2x", "g(x)=x+1", "r(x)=x-3", "h(x)=f(g(r(x)))", "k(x)=f(g(r(x)))", "P=(a,h(a))", "Q=(a,k(a))"];
+      if (preset === "identity") return [`a=${safeX}`, "f(x)=2x+1", "I(x)=x", "h(x)=f(I(x))", "k(x)=I(f(x))", "P=(a,h(a))", "Q=(a,k(a))"];
+      return [`a=${safeX}`, "f(x)=2x+1", "g(x)=x+3", "h(x)=f(g(x))", "k(x)=g(f(x))", "P=(a,h(a))", "Q=(a,k(a))"];
     case "SIM-05":
-      if (preset === "nonpositive") return ["f(x)=If(x<=0,x^2)", "g(x)=-sqrt(x)", `P=(${-Math.sqrt(safeX)},${safeX})`, `Q=(${safeX},${-Math.sqrt(safeX)})`];
-      if (preset === "nonnegative") return ["f(x)=If(x>=0,x^2)", "g(x)=sqrt(x)", `P=(${Math.sqrt(safeX)},${safeX})`, `Q=(${safeX},${Math.sqrt(safeX)})`];
-      return ["f(x)=x^2", `P=(${Math.sqrt(safeX)},${safeX})`, `Q=(${-Math.sqrt(safeX)},${safeX})`];
-    case "SIM-06": return ["f(x)=2x+3", "i(x)=x", `P=(${safeX},${2 * safeX + 3})`, `Q=(${2 * safeX + 3},${safeX})`];
-    case "SIM-07": return ["f(x)=2x+3", "g(x)=x+2", "h(x)=f(g(x))", "k(x)=(x-7)/2", `P=(${safeX},${2 * safeX + 7})`, `Q=(${2 * safeX + 7},${safeX})`];
-    case "SIM-08": return ["f(x)=0.8x+5000", "g(x)=(x-5000)/0.8", `P=(${safeX},${0.8 * safeX + 5000})`, `Q=(${0.8 * safeX + 5000},${safeX})`];
+      {
+        const pointCommands = safeX >= 0 ? [`P=(${-Math.sqrt(safeX)},${safeX})`, `Q=(${Math.sqrt(safeX)},${safeX})`] : [];
+        if (preset === "nonpositive") return [`b=${safeX}`, "l:y=b", "f(x)=If(x<=0,x^2)", "g(x)=-sqrt(x)", ...(safeX >= 0 ? [`P=(${-Math.sqrt(safeX)},${safeX})`, `Q=(${safeX},${-Math.sqrt(safeX)})`] : [])];
+        if (preset === "nonnegative") return [`b=${safeX}`, "l:y=b", "f(x)=If(x>=0,x^2)", "g(x)=sqrt(x)", ...(safeX >= 0 ? [`P=(${Math.sqrt(safeX)},${safeX})`, `Q=(${safeX},${Math.sqrt(safeX)})`] : [])];
+        return [`b=${safeX}`, "l:y=b", "f(x)=x^2", ...pointCommands];
+      }
+    case "SIM-06": return [`a=${safeX}`, "f(x)=2x+3", "g(x)=(x-3)/2", "diag:y=x", "P=(a,f(a))", "Q=(f(a),a)"];
+    case "SIM-07": return [`a=${safeX}`, "t=(a-7)/2", "f(x)=2x+3", "g(x)=x+2", "h(x)=f(g(x))", "k(x)=(x-7)/2", "diag:y=x", "P=(t,a)", "Q=(a,t)"];
+    case "SIM-08": {
+      const [discountValue, feeValue] = preset.split("-").map(Number);
+      const discount = Number.isFinite(discountValue) ? discountValue / 100 : 0.2;
+      const fee = Number.isFinite(feeValue) ? feeValue : 5;
+      return [`a=${safeX}`, `r=${discount}`, `c=${fee}`, "h(x)=(1-r)*x+c", "k(x)=(x-c)/(1-r)", "diag:y=x", "P=(a,h(a))", "Q=(h(a),a)"];
+    }
   }
 }
