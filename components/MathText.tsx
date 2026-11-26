@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prepareMathText } from "@/lib/math-text";
 
 type MathJaxApi = {
   startup?: { promise?: Promise<unknown> };
@@ -13,6 +14,7 @@ declare global { interface Window { MathJax?: MathJaxApi } }
 /** Renders trusted TeX supplied by the application or its question bank. */
 export function MathText({ children, className }: { children:string; className?:string }) {
   const element = useRef<HTMLSpanElement>(null);
+  const prepared = prepareMathText(children);
   useEffect(() => {
     let cancelled = false;
     let attempts = 0;
@@ -31,6 +33,6 @@ export function MathText({ children, className }: { children:string; className?:
     };
     typeset();
     return () => { cancelled = true; };
-  }, [children]);
-  return <span className={className} ref={element}>{children}</span>;
+  }, [prepared]);
+  return <span className={className} ref={element}>{prepared}</span>;
 }

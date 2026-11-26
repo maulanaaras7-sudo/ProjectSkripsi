@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test:simulation-lab": "node --experimental-strip-types tests/simulation-lab-math.test.mjs && node --experimental-strip-types tests/function-expression.test.mjs",
     "test:assessment": "node --experimental-strip-types --test tests/evaluation-selection.test.mjs tests/text-normalization.test.mjs",
+    "test:math-rendering": "node --experimental-strip-types --test tests/math-text.test.mjs",
     "audit:assessment": "node --env-file=.env.local scripts/audit-assessment-bank.mjs",
     "fix:axis-terms": "node --env-file=.env.local scripts/normalize-axis-terms.mjs --normalize-files --apply",
     "db:build-seed": "node scripts/build-neon-question-seed.mjs && node scripts/build-neon-example-seed.mjs",
