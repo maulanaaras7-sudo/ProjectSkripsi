@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { evaluationQuestions } from "@/lib/evaluation";
+import { EvaluationBlueprintError } from "@/lib/evaluation-selection";
 import { rows, transaction } from "@/lib/db";
 
 const options = new Set(["a", "b", "c", "d", "e"]);
@@ -27,7 +28,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ kin
   if (!validKind(kind)) return NextResponse.json({ error: "Jenis evaluasi tidak valid." }, { status: 404 });
   const body = await request.json().catch(() => null) as { answers?: Record<string, string> } | null;
   if (!body?.answers || typeof body.answers !== "object") return NextResponse.json({ error: "Draf jawaban tidak valid." }, { status: 400 });
-  const permitted = new Set((await evaluationQuestions(user.id, kind)).map((question) => question.id));
+  let permitted: Set<number>;
+  try {
+    permitted = new Set((await evaluationQuestions(user.id, kind)).map((question) => question.id));
+  } catch (error) {
+    if (!(error instanceof EvaluationBlueprintError)) throw error;
+    console.error("assessment-blueprint-shortage", { kind, missingSlots: error.missingSlots });
+    return NextResponse.json({ error: "Bank evaluasi belum memenuhi kisi-kisi.", code: error.code }, { status: 503 });
+  }
   const entries = Object.entries(body.answers).filter(([id, answer]) => permitted.has(Number(id)) && options.has(answer));
   try {
     await transaction(async (connection) => {

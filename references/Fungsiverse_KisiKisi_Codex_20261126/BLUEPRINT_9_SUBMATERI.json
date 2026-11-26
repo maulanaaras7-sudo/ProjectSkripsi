@@ -1,0 +1,115 @@
+{
+  "title": "Fungsiverse – Kisi-kisi instrumen pretest dan posttest",
+  "version": "1.0 (usulan operasional; audit terhadap bank soal wajib)",
+  "learning_objectives": [
+    { "code": "TP01", "text": "Menjelaskan konsep fungsi serta menentukan domain, kodomain, dan range sebagai pengetahuan prasyarat." },
+    { "code": "TP02", "text": "Menentukan komposisi dua fungsi atau lebih serta menjelaskan urutan dan sifat yang berlaku." },
+    { "code": "TP03", "text": "Menentukan syarat suatu fungsi memiliki invers dan menentukan invers secara aljabar." },
+    { "code": "TP04", "text": "Menganalisis hubungan suatu fungsi dan inversnya melalui representasi aljabar dan grafik." },
+    { "code": "TP05", "text": "Menganalisis hubungan antara fungsi komposisi dan fungsi invers." },
+    { "code": "TP06", "text": "Menggunakan komposisi dan invers untuk menyelesaikan dan memodelkan permasalahan kontekstual." }
+  ],
+  "bank": {
+    "pretest": 100,
+    "posttest": 100,
+    "difficulty_totals_per_bank": { "rendah": 34, "sedang": 33, "tinggi": 33 },
+    "choices": ["A", "B", "C", "D", "E"],
+    "cognitive_range": "C2–C4 (target rancangan; validasi tiap butir)"
+  },
+  "package": {
+    "pretest": 25,
+    "posttest": 25,
+    "difficulty_quota": { "rendah": 8, "sedang": 9, "tinggi": 8 },
+    "rule": "Satu soal per kombinasi submateri × tingkat kesulitan yang dialokasikan; bentuk pre dan post menggunakan blueprint setara."
+  },
+  "categories": [
+    {
+      "id": "SM01",
+      "database_value": "konsep_dasar_fungsi",
+      "title": "Konsep dasar fungsi, notasi, domain, kodomain, range",
+      "tp": "TP01",
+      "indicator": "Mengidentifikasi fungsi serta menentukan domain, kodomain, range; menganalisis batasan domain sederhana.",
+      "bank_target_per_test": { "rendah": 5, "sedang": 4, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM02",
+      "database_value": "operasi_aljabar_fungsi",
+      "title": "Operasi aljabar pada fungsi",
+      "tp": "Prasyarat TP02–TP03",
+      "indicator": "Menghitung (f+g), (f−g), (fg), (f/g) dan domain hasil yang valid.",
+      "bank_target_per_test": { "rendah": 5, "sedang": 4, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM03",
+      "database_value": "notasi_konsep_komposisi",
+      "title": "Konsep dan notasi komposisi fungsi",
+      "tp": "TP02",
+      "indicator": "Menafsirkan (f∘g)(x)=f(g(x)), membaca urutan, dan mengevaluasi nilai komposisi sederhana.",
+      "bank_target_per_test": { "rendah": 4, "sedang": 4, "tinggi": 0 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 0 }
+    },
+    {
+      "id": "SM04",
+      "database_value": "komposisi_dua_atau_lebih",
+      "title": "Komposisi dua fungsi atau lebih",
+      "tp": "TP02",
+      "indicator": "Menentukan bentuk/nilai f∘g, g∘f, dan komposisi tiga fungsi sesuai domain.",
+      "bank_target_per_test": { "rendah": 4, "sedang": 4, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM05",
+      "database_value": "sifat_komposisi",
+      "title": "Sifat-sifat komposisi fungsi",
+      "tp": "TP02",
+      "indicator": "Menguji tidak selalu komutatif, asosiatif, dan identitas beserta syarat domain.",
+      "bank_target_per_test": { "rendah": 4, "sedang": 4, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM06",
+      "database_value": "konsep_syarat_fungsi_invers",
+      "title": "Konsep dan syarat fungsi invers",
+      "tp": "TP03",
+      "indicator": "Memutuskan apakah invers merupakan fungsi berdasarkan injektivitas/bijektivitas dan pembatasan domain/kodomain.",
+      "bank_target_per_test": { "rendah": 4, "sedang": 4, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM07",
+      "database_value": "menentukan_fungsi_invers",
+      "title": "Menentukan fungsi invers secara aljabar",
+      "tp": "TP03",
+      "indicator": "Menentukan invers fungsi yang memenuhi syarat dan memverifikasi komposisi identitas.",
+      "bank_target_per_test": { "rendah": 4, "sedang": 3, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM08",
+      "database_value": "hubungan_fungsi_komposisi_invers",
+      "title": "Hubungan fungsi, komposisi, dan invers",
+      "tp": "TP04–TP05",
+      "indicator": "Menganalisis pertukaran titik pada grafik y=x; memverifikasi f∘f⁻¹ dan (f∘g)⁻¹=g⁻¹∘f⁻¹.",
+      "bank_target_per_test": { "rendah": 4, "sedang": 3, "tinggi": 5 },
+      "package_quota_per_test": { "rendah": 1, "sedang": 1, "tinggi": 1 }
+    },
+    {
+      "id": "SM09",
+      "database_value": "permasalahan_kontekstual",
+      "title": "Masalah kontekstual komposisi dan invers",
+      "tp": "TP06",
+      "indicator": "Memodelkan proses bertahap dan menentukan nilai awal dari output menggunakan invers.",
+      "bank_target_per_test": { "rendah": 0, "sedang": 3, "tinggi": 4 },
+      "package_quota_per_test": { "rendah": 0, "sedang": 1, "tinggi": 1 }
+    }
+  ],
+  "constraints": [
+    "Jangan mengubah/menghapus bank asli tanpa backup",
+    "Jangan menulis ulang soal atau kunci tanpa review akademik",
+    "Adaptivitas hanya berlaku pada latihan, bukan posttest",
+    "Tingkat kesulitan bukan ekuivalen langsung dengan level kognitif C2–C4",
+    "Aturan perubahan ejaan hanya berlaku untuk teks manusia, bukan kode/ekspresi matematika."
+  ]
+}

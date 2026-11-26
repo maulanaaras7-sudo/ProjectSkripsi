@@ -2,10 +2,16 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { rows, transaction } from "@/lib/db";
 import { evaluationQuestions } from "@/lib/evaluation";
+import { EvaluationBlueprintError } from "@/lib/evaluation-selection";
 import { PRETEST_HIGH_BOUNDARY, PRETEST_LOW_BOUNDARY } from "@/lib/constants";
 import type { UserRow } from "@/lib/types";
 
 function validKind(value:string):value is "pretest"|"posttest"{return value==="pretest"||value==="posttest"}
+function blueprintFailure(error:unknown,kind:"pretest"|"posttest"){
+  if(!(error instanceof EvaluationBlueprintError))throw error;
+  console.error("assessment-blueprint-shortage",{kind,missingSlots:error.missingSlots});
+  return NextResponse.json({error:`Bank ${kind} belum memenuhi kisi-kisi paket 25 soal.`,code:error.code,missingSlots:error.missingSlots},{status:503});
+}
 async function deadlineFor(userId:number,kind:"pretest"|"posttest") {
   try {
     const [existing]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("SELECT deadline_pada FROM evaluation_attempts WHERE user_id=? AND jenis=?",[userId,kind]);
@@ -26,8 +32,8 @@ export async function GET(_:Request,{params}:{params:Promise<{kind:string}>}){
     if(!fresh.pretest_selesai||!progress?.posttest_diizinkan)return NextResponse.json({error:"Selesaikan alur latihan sebelum membuka post-test."},{status:403});
     if(fresh.posttest_selesai)return NextResponse.json({error:"Post-test sudah diselesaikan."},{status:409});
   }
-  const questions=await evaluationQuestions(user.id,kind);
-  if(questions.length<25)return NextResponse.json({error:`Bank ${kind} belum memiliki 25 soal aktif dengan komposisi yang diperlukan.`},{status:503});
+  let questions;
+  try{questions=await evaluationQuestions(user.id,kind);}catch(error){return blueprintFailure(error,kind);}
   const deadlineAt=await deadlineFor(user.id,kind);
   return NextResponse.json({completed:false,deadlineAt,questions:questions.map(({jawaban_benar,pembahasan,_option_order,...q})=>({
     ...q,
@@ -51,7 +57,8 @@ export async function POST(request:Request,{params}:{params:Promise<{kind:string
     if(attempt){const deadline=new Date(attempt.deadline_pada).getTime();timeExpired=Date.now()>=deadline;if(Date.now()>deadline+15_000)return NextResponse.json({error:"Waktu evaluasi telah berakhir. Pengiriman melewati toleransi 15 detik tidak dapat dinilai."},{status:409});}
   } catch { /* Deployment lama tanpa tabel attempt tetap dapat menyelesaikan evaluasi. */ }
   const payload=await request.json().catch(()=>null) as {answers?:Record<string,string>}|null; const answers=payload?.answers??{};
-  const questions=await evaluationQuestions(user.id,kind); if(questions.length<25)return NextResponse.json({error:"Paket soal tidak lengkap."},{status:503});
+  let questions;
+  try{questions=await evaluationQuestions(user.id,kind);}catch(error){return blueprintFailure(error,kind);}
   if(!timeExpired&&questions.some(question=>!["a","b","c","d","e"].includes(answers[String(question.id)])))return NextResponse.json({error:`Semua soal wajib dijawab sebelum ${kind === "pretest" ? "pre-test" : "post-test"} dikirim.`},{status:400});
   let correct=0;
   await transaction(async connection=>{

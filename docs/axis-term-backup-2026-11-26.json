@@ -1,0 +1,614 @@
+{
+  "created_at": "2026-11-26T13:15:04.830Z",
+  "purpose": "Rollback normalisasi istilah sumbu-x/y",
+  "changes": [
+    {
+      "table": "soal",
+      "primaryKey": 143,
+      "displayKey": "LAT-R-127",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 143,
+      "displayKey": "LAT-R-127",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 144,
+      "displayKey": "LAT-R-128",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 144,
+      "displayKey": "LAT-R-128",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 145,
+      "displayKey": "LAT-R-129",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 145,
+      "displayKey": "LAT-R-129",
+      "field": "pilihan_b",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 146,
+      "displayKey": "LAT-R-130",
+      "field": "pilihan_b",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 146,
+      "displayKey": "LAT-R-130",
+      "field": "pilihan_c",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 147,
+      "displayKey": "LAT-R-131",
+      "field": "pilihan_c",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 147,
+      "displayKey": "LAT-R-131",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 148,
+      "displayKey": "LAT-R-132",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 148,
+      "displayKey": "LAT-R-132",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 149,
+      "displayKey": "LAT-R-133",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 149,
+      "displayKey": "LAT-R-133",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 150,
+      "displayKey": "LAT-R-134",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 150,
+      "displayKey": "LAT-R-134",
+      "field": "pilihan_b",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 151,
+      "displayKey": "LAT-R-135",
+      "field": "pilihan_b",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 151,
+      "displayKey": "LAT-R-135",
+      "field": "pilihan_c",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 152,
+      "displayKey": "LAT-R-136",
+      "field": "pilihan_c",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 152,
+      "displayKey": "LAT-R-136",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 153,
+      "displayKey": "LAT-R-137",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 153,
+      "displayKey": "LAT-R-137",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 154,
+      "displayKey": "LAT-R-138",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 154,
+      "displayKey": "LAT-R-138",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 651,
+      "displayKey": "LAT-T-125",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=3x-1 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=3x-1 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 651,
+      "displayKey": "LAT-T-125",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=1/(3x+1) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(3x+1) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 652,
+      "displayKey": "LAT-T-126",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=4x-2 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=4x-2 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 652,
+      "displayKey": "LAT-T-126",
+      "field": "pilihan_c",
+      "before": "f^-1(x)=1/(4x+2) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(4x+2) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 653,
+      "displayKey": "LAT-T-127",
+      "field": "pilihan_c",
+      "before": "f^-1(x)=5x-3 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=5x-3 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 653,
+      "displayKey": "LAT-T-127",
+      "field": "pilihan_d",
+      "before": "f^-1(x)=1/(5x+3) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(5x+3) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 654,
+      "displayKey": "LAT-T-128",
+      "field": "pilihan_d",
+      "before": "f^-1(x)=2x-4 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=2x-4 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 654,
+      "displayKey": "LAT-T-128",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=1/(2x+4) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(2x+4) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 655,
+      "displayKey": "LAT-T-129",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=1/(3x+5) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(3x+5) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 655,
+      "displayKey": "LAT-T-129",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=3x-5 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=3x-5 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 656,
+      "displayKey": "LAT-T-130",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=4x-1 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=4x-1 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 656,
+      "displayKey": "LAT-T-130",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=1/(4x+1) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(4x+1) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 657,
+      "displayKey": "LAT-T-131",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=5x-2 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=5x-2 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 657,
+      "displayKey": "LAT-T-131",
+      "field": "pilihan_c",
+      "before": "f^-1(x)=1/(5x+2) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(5x+2) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 658,
+      "displayKey": "LAT-T-132",
+      "field": "pilihan_c",
+      "before": "f^-1(x)=2x-3 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=2x-3 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 658,
+      "displayKey": "LAT-T-132",
+      "field": "pilihan_d",
+      "before": "f^-1(x)=1/(2x+3) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(2x+3) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 659,
+      "displayKey": "LAT-T-133",
+      "field": "pilihan_d",
+      "before": "f^-1(x)=3x-4 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=3x-4 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 659,
+      "displayKey": "LAT-T-133",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=1/(3x+4) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(3x+4) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 660,
+      "displayKey": "LAT-T-134",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=1/(4x+5) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(4x+5) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 660,
+      "displayKey": "LAT-T-134",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=4x-5 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=4x-5 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 782,
+      "displayKey": "PRE-F-001",
+      "field": "pilihan_c",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 782,
+      "displayKey": "PRE-F-001",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 783,
+      "displayKey": "PRE-F-002",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 783,
+      "displayKey": "PRE-F-002",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 784,
+      "displayKey": "PRE-F-003",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 784,
+      "displayKey": "PRE-F-003",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 785,
+      "displayKey": "PRE-F-004",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 785,
+      "displayKey": "PRE-F-004",
+      "field": "pilihan_b",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 797,
+      "displayKey": "POST-F-001",
+      "field": "pilihan_c",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 797,
+      "displayKey": "POST-F-001",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 798,
+      "displayKey": "POST-F-002",
+      "field": "pilihan_d",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 798,
+      "displayKey": "POST-F-002",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 799,
+      "displayKey": "POST-F-003",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 799,
+      "displayKey": "POST-F-003",
+      "field": "pilihan_e",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 800,
+      "displayKey": "POST-F-004",
+      "field": "pilihan_a",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-x",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 800,
+      "displayKey": "POST-F-004",
+      "field": "pilihan_b",
+      "before": "Grafik invers merupakan pencerminan terhadap sumbu-y",
+      "after": "Grafik invers merupakan pencerminan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 867,
+      "displayKey": "PRE-F-068",
+      "field": "pilihan_d",
+      "before": "f^-1(x)=2x-4 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=2x-4 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 867,
+      "displayKey": "PRE-F-068",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=1/(2x+4) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(2x+4) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 868,
+      "displayKey": "PRE-F-069",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=1/(3x+5) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(3x+5) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 868,
+      "displayKey": "PRE-F-069",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=3x-5 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=3x-5 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 869,
+      "displayKey": "PRE-F-070",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=4x-1 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=4x-1 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 869,
+      "displayKey": "PRE-F-070",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=1/(4x+1) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(4x+1) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 870,
+      "displayKey": "PRE-F-071",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=5x-2 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=5x-2 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 870,
+      "displayKey": "PRE-F-071",
+      "field": "pilihan_c",
+      "before": "f^-1(x)=1/(5x+2) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(5x+2) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 952,
+      "displayKey": "POST-F-068",
+      "field": "pilihan_d",
+      "before": "f^-1(x)=2x-4 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=2x-4 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 952,
+      "displayKey": "POST-F-068",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=1/(2x+4) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(2x+4) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 953,
+      "displayKey": "POST-F-069",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=1/(3x+5) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(3x+5) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 953,
+      "displayKey": "POST-F-069",
+      "field": "pilihan_e",
+      "before": "f^-1(x)=3x-5 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=3x-5 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 954,
+      "displayKey": "POST-F-070",
+      "field": "pilihan_a",
+      "before": "f^-1(x)=4x-1 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=4x-1 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 954,
+      "displayKey": "POST-F-070",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=1/(4x+1) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(4x+1) dan grafiknya dicerminkan terhadap sumbu y"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 955,
+      "displayKey": "POST-F-071",
+      "field": "pilihan_b",
+      "before": "f^-1(x)=5x-2 dan grafiknya dicerminkan terhadap sumbu-x",
+      "after": "f^-1(x)=5x-2 dan grafiknya dicerminkan terhadap sumbu x"
+    },
+    {
+      "table": "soal",
+      "primaryKey": 955,
+      "displayKey": "POST-F-071",
+      "field": "pilihan_c",
+      "before": "f^-1(x)=1/(5x+2) dan grafiknya dicerminkan terhadap sumbu-y",
+      "after": "f^-1(x)=1/(5x+2) dan grafiknya dicerminkan terhadap sumbu y"
+    }
+  ]
+}
