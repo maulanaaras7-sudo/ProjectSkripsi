@@ -10,7 +10,7 @@ export async function Header() {
     <div className="logo"><Link href="/" className="brand-link"><b>Fungsiverse</b><span>Belajar fungsi dengan lebih mudah</span></Link></div>
     <PrimaryNavigation role={user?.role ?? null} />
     <div className="account-actions">
-      {user ? <><div className="user-chip"><span className="user-avatar" aria-hidden="true">{initial}</span><span><strong>{user.nama}</strong><small>{user.role === "guru" ? "Guru" : "Siswa"}</small></span></div><form action="/api/auth/logout" method="post"><button className="btn-small" type="submit">Keluar</button></form></> : <><Link className="btn-small" href="/login">Masuk</Link><Link className="pill" href="/register">Daftar</Link></>}
+      {user ? <><Link className="user-chip" href="/profil" aria-label="Edit profil"><span className="user-avatar" aria-hidden="true">{initial}</span><span><strong>{user.nama}</strong><small>{user.role === "guru" ? "Guru" : "Siswa"}</small></span></Link><form action="/api/auth/logout" method="post"><button className="btn-small" type="submit">Keluar</button></form></> : <><Link className="btn-small" href="/login">Masuk</Link><Link className="pill" href="/register">Daftar</Link></>}
     </div>
   </header>;
 }
