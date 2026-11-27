@@ -16,5 +16,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Email atau kata sandi salah." }, { status: 401 });
   }
   await createSession({ id: user.id, nama: user.nama, email: user.email, role: user.role, kelompok: user.kelompok });
-  return NextResponse.json({ ok: true, redirect: user.role === "guru" ? "/dashboard/guru" : !user.pretest_selesai || !user.kelompok ? "/pretest" : "/dashboard/siswa" });
+  return NextResponse.json({ ok: true, redirect: user.role === "guru" ? "/dashboard/guru" : "/dashboard/siswa" });
 }

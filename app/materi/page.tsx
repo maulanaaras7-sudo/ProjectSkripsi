@@ -14,7 +14,7 @@ export default async function MaterialsPage() {
   const user = await getSession();
   if (user?.role === "siswa") {
     const [status] = await rows<StudentStatus[]>("SELECT pretest_selesai,kelompok FROM users WHERE id=?", [user.id]);
-    if (!status?.pretest_selesai || !status.kelompok) redirect("/pretest");
+    if (!status?.pretest_selesai || !status.kelompok) redirect("/dashboard/siswa");
   }
   let activities: ActivityRow[] = [];
   try { activities = await rows<ActivityRow[]>(`SELECT a.id activity_id,a.materi_id,a.judul,a.deskripsi,a.soal_ringkas,l.id step_id,l.pertanyaan,l.pilihan,COALESCE(p.selesai,0) selesai FROM aktivitas_materi a JOIN langkah_aktivitas l ON l.aktivitas_id=a.id LEFT JOIN progres_aktivitas p ON p.langkah_id=l.id AND p.user_id=? WHERE a.aktif=1 ORDER BY a.id,l.urutan`, [user?.role === "siswa" ? user.id : 0]); } catch { /* migrasi aktivitas bersifat opsional */ }
