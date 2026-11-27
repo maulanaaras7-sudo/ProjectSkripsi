@@ -4,6 +4,7 @@ import { rows, transaction } from "@/lib/db";
 import { evaluationQuestions } from "@/lib/evaluation";
 import { EvaluationBlueprintError } from "@/lib/evaluation-selection";
 import { PRETEST_HIGH_BOUNDARY, PRETEST_LOW_BOUNDARY } from "@/lib/constants";
+import { evaluationDurationMinutes } from "@/lib/evaluation-settings";
 import type { UserRow } from "@/lib/types";
 
 function validKind(value:string):value is "pretest"|"posttest"{return value==="pretest"||value==="posttest"}
@@ -12,11 +13,11 @@ function blueprintFailure(error:unknown,kind:"pretest"|"posttest"){
   console.error("assessment-blueprint-shortage",{kind,missingSlots:error.missingSlots});
   return NextResponse.json({error:`Bank ${kind} belum memenuhi kisi-kisi paket 25 soal.`,code:error.code,missingSlots:error.missingSlots},{status:503});
 }
-async function deadlineFor(userId:number,kind:"pretest"|"posttest") {
+async function deadlineFor(userId:number,kind:"pretest"|"posttest",durationMinutes:number) {
   try {
     const [existing]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("SELECT deadline_pada FROM evaluation_attempts WHERE user_id=? AND jenis=?",[userId,kind]);
     if(existing)return existing.deadline_pada;
-    const [created]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("INSERT INTO evaluation_attempts(user_id,jenis,deadline_pada) VALUES(?,?,CURRENT_TIMESTAMP + INTERVAL '60 minutes') ON CONFLICT(user_id,jenis) DO UPDATE SET jenis=EXCLUDED.jenis RETURNING deadline_pada",[userId,kind]);
+    const [created]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("INSERT INTO evaluation_attempts(user_id,jenis,deadline_pada) VALUES(?,?,CURRENT_TIMESTAMP + (?::integer * INTERVAL '1 minute')) ON CONFLICT(user_id,jenis) DO UPDATE SET jenis=EXCLUDED.jenis RETURNING deadline_pada",[userId,kind,durationMinutes]);
     return created?.deadline_pada??null;
   }catch{return null;}
 }
@@ -34,8 +35,9 @@ export async function GET(_:Request,{params}:{params:Promise<{kind:string}>}){
   }
   let questions;
   try{questions=await evaluationQuestions(user.id,kind);}catch(error){return blueprintFailure(error,kind);}
-  const deadlineAt=await deadlineFor(user.id,kind);
-  return NextResponse.json({completed:false,deadlineAt,questions:questions.map(({jawaban_benar,pembahasan,_option_order,...q})=>({
+  const durationMinutes=await evaluationDurationMinutes(kind);
+  const deadlineAt=await deadlineFor(user.id,kind,durationMinutes);
+  return NextResponse.json({completed:false,deadlineAt,durationSeconds:durationMinutes*60,questions:questions.map(({jawaban_benar,pembahasan,_option_order,...q})=>({
     ...q,
     options:(_option_order??[]).map((key)=>({value:key,text:q[`pilihan_${key}`]})),
   }))});

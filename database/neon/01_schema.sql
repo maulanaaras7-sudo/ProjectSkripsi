@@ -204,6 +204,15 @@ CREATE TABLE IF NOT EXISTS evaluation_attempts (
   UNIQUE(user_id,jenis)
 );
 
+CREATE TABLE IF NOT EXISTS evaluation_settings (
+  jenis VARCHAR(10) PRIMARY KEY CHECK (jenis IN ('pretest','posttest')),
+  durasi_menit INTEGER NOT NULL CHECK (durasi_menit BETWEEN 5 AND 180),
+  diperbarui_pada TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  diperbarui_oleh INTEGER REFERENCES users(id) ON DELETE SET NULL
+);
+INSERT INTO evaluation_settings (jenis,durasi_menit) VALUES ('pretest',60),('posttest',60)
+ON CONFLICT (jenis) DO NOTHING;
+
 INSERT INTO materi(judul,urutan,konten) VALUES
 ('Konsep Dasar Fungsi',1,'Fungsi adalah relasi yang memasangkan setiap anggota himpunan domain dengan tepat satu anggota himpunan kodomain. Notasi f(x) menyatakan nilai fungsi f untuk suatu nilai x.'),
 ('Komposisi Fungsi',2,'Komposisi fungsi (f∘g)(x) = f(g(x)) diperoleh dengan mensubstitusikan g(x) ke dalam f(x). Urutan pengerjaan penting: g dikerjakan terlebih dahulu, kemudian hasilnya dimasukkan ke f.'),

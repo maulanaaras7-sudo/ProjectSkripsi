@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { MathText } from "@/components/MathText";
+import { EVALUATION_DURATION_SECONDS } from "@/lib/constants";
 
 type Question = { id: number; pertanyaan: string; options: Array<{ value: string; text: string }> };
-const duration = 60 * 60;
+const duration = EVALUATION_DURATION_SECONDS;
 
 export function Evaluation({ kind }: { kind: "pretest" | "posttest" }) {
   const router = useRouter();
@@ -27,9 +28,10 @@ export function Evaluation({ kind }: { kind: "pretest" | "posttest" }) {
       const remoteDraft = await fetch(`/api/evaluation/${kind}/draft`, { cache: "no-store" }).then(async (response) => response.ok ? (await response.json()).answers as Record<number, string> : {}).catch(() => ({} as Record<number, string>));
       const startedAt = Number(localStorage.getItem(startedKey));
       const serverDeadline = data.deadlineAt ? new Date(data.deadlineAt).getTime() : 0;
+      const configuredDuration = Number(data.durationSeconds) > 0 ? Number(data.durationSeconds) : duration;
       const elapsed = startedAt ? Math.floor((Date.now() - startedAt) / 1000) : 0;
       if (!startedAt && !serverDeadline) localStorage.setItem(startedKey, String(Date.now()));
-      setSeconds(serverDeadline ? Math.max(0, Math.ceil((serverDeadline - Date.now()) / 1000)) : Math.max(0, duration - elapsed));
+      setSeconds(serverDeadline ? Math.max(0, Math.ceil((serverDeadline - Date.now()) / 1000)) : Math.max(0, configuredDuration - elapsed));
       if (saved || Object.keys(remoteDraft).length) {
         try { setAnswers({ ...remoteDraft, ...(saved ? JSON.parse(saved) : {}) }); setAutosave("Draf jawaban dipulihkan."); }
         catch { localStorage.removeItem(draftKey); setAutosave("Penyimpanan jawaban aktif."); }

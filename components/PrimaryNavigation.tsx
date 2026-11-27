@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 type Role = "siswa" | "guru" | null;
 const studentLinks = [["/dashboard/siswa", "Ringkasan"], ["/materi", "Materi"], ["/visualisasi", "Simulasi"], ["/latihan", "Latihan"], ["/hasil", "Hasil belajar"], ["/panduan", "Bantuan"]] as const;
-const teacherLinks = [["/dashboard/guru", "Dashboard"], ["/guru/materi", "Materi"], ["/guru/soal", "Bank soal"], ["/guru/hasil", "Hasil siswa"], ["/panduan", "Bantuan"]] as const;
+const teacherLinks = [["/dashboard/guru", "Dashboard"], ["/guru/materi", "Materi"], ["/guru/soal", "Bank soal"], ["/guru/hasil", "Hasil siswa"], ["/guru/pengaturan", "Pengaturan"], ["/panduan", "Bantuan"]] as const;
 const visitorLinks = [["/", "Beranda"], ["/panduan", "Panduan"], ["/materi", "Materi"], ["/visualisasi", "Simulasi"]] as const;
 
 export function PrimaryNavigation({ role }: { role: Role }) {
