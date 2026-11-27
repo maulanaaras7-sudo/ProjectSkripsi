@@ -55,6 +55,45 @@ function exponentValue(raw: string) {
   return raw.startsWith("{") && raw.endsWith("}") ? raw.slice(1, -1) : raw;
 }
 
+function normalizeCodePowers(value: string) {
+  return value.replace(
+    /([A-Za-z0-9_.)}])\s*\*\*\s*([+-]?(?:[A-Za-z0-9_.]+|\([^()]+\)|\{[^{}]+\}))/g,
+    "$1^$2",
+  );
+}
+
+const exponentPattern = String.raw`(?:\^(?:\{[^{}]+\}|\([^()]+\)|[-+]?[A-Za-z0-9.]+))?`;
+const functionAtomPattern = String.raw`[A-Za-z_][A-Za-z0-9_]*\([^()]*\)${exponentPattern}`;
+const parenthesizedAtomPattern = String.raw`\([^()]*\)${exponentPattern}`;
+const simpleAtomPattern = String.raw`[A-Za-z0-9_.]+${exponentPattern}`;
+const mathAtomPattern = `(?:${functionAtomPattern}|${parenthesizedAtomPattern}|${simpleAtomPattern})`;
+const plainOperatorPattern = new RegExp(`${mathAtomPattern}(?:\\s*[*/]\\s*${mathAtomPattern})+`, "g");
+
+function isPlainLanguageSlash(value: string) {
+  if (!value.includes("/") || value.includes("*")) return false;
+  const compact = value.replace(/\s/g, "");
+  if (/^[A-Z][A-Z0-9]*(?:\/[A-Z][A-Z0-9]*)+$/.test(compact)) return true;
+  const operands = compact.split("/");
+  return !/[0-9()[\]^{}.]/.test(compact) && operands.every((operand) => operand.length > 1);
+}
+
+function wrapPlainOperators(value: string) {
+  return value.replace(plainOperatorPattern, (expression) => {
+    if (isPlainLanguageSlash(expression)) return expression;
+    const [first, ...parts] = expression.trim().split(/\s*([*/])\s*/);
+    let equation = first;
+    for (let index = 0; index < parts.length; index += 2) {
+      const operator = parts[index];
+      const operand = parts[index + 1];
+      if (!operand) break;
+      equation = operator === "*"
+        ? `${equation} \\times ${operand}`
+        : `\\frac{${equation}}{${operand}}`;
+    }
+    return `\\(${equation}\\)`;
+  });
+}
+
 function wrapPlainPowers(value: string) {
   let output = "";
   let consumed = 0;
@@ -73,16 +112,24 @@ function wrapPlainPowers(value: string) {
   return output + value.slice(consumed);
 }
 
-/** Adds MathJax delimiters only to plain-text powers; existing TeX remains untouched. */
-export function prepareMathText(value: string) {
+function transformOutsideMath(value: string, transform: (plain: string) => string) {
   let output = "";
   let cursor = 0;
   for (const match of value.matchAll(delimitedMathPattern)) {
     const index = match.index ?? 0;
-    output += wrapPlainPowers(value.slice(cursor, index));
+    output += transform(value.slice(cursor, index));
     output += match[0];
     cursor = index + match[0].length;
   }
-  return output + wrapPlainPowers(value.slice(cursor));
+  return output + transform(value.slice(cursor));
+}
+
+/** Converts code-like powers, multiplication, and division into inline MathJax equations. */
+export function prepareMathText(value: string) {
+  return transformOutsideMath(value, (plain) => {
+    const normalized = normalizeCodePowers(plain);
+    const withOperators = wrapPlainOperators(normalized);
+    return transformOutsideMath(withOperators, wrapPlainPowers);
+  });
 }
 

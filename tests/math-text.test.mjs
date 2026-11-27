@@ -12,6 +12,20 @@ test("pangkat teks biasa dibungkus sebagai equation MathJax", () => {
 
 test("notasi invers ditampilkan sebagai pangkat negatif", () => {
   assert.equal(prepareMathText("f^-1(x) dan f_2^-1(x)"), "\\(f^{-1}\\)(x) dan \\(f_2^{-1}\\)(x)");
+  assert.equal(prepareMathText("2**3 dan (x+1)**2"), "\\(2^{3}\\) dan \\((x+1)^{2}\\)");
+});
+
+test("perkalian memakai tanda kali dan pembagian menjadi pecahan", () => {
+  assert.equal(prepareMathText("28*21=588"), "\\(28 \\times 21\\)=588");
+  assert.equal(prepareMathText("(x-1)/2"), "\\(\\frac{(x-1)}{2}\\)");
+  assert.equal(prepareMathText("f(x)/g(x)"), "\\(\\frac{f(x)}{g(x)}\\)");
+  assert.equal(prepareMathText("x^2/2"), "\\(\\frac{x^2}{2}\\)");
+  assert.equal(prepareMathText("a/b/c"), "\\(\\frac{\\frac{a}{b}}{c}\\)");
+});
+
+test("garis miring pada bahasa dan singkatan bukan pembagian", () => {
+  assert.equal(prepareMathText("dan/atau"), "dan/atau");
+  assert.equal(prepareMathText("R/S/T"), "R/S/T");
 });
 
 test("equation TeX yang sudah benar tidak dibungkus ulang", () => {
