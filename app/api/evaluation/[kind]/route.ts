@@ -4,6 +4,7 @@ import { rows, transaction } from "@/lib/db";
 import { evaluationQuestions } from "@/lib/evaluation";
 import { EvaluationBlueprintError } from "@/lib/evaluation-selection";
 import { PRETEST_HIGH_BOUNDARY, PRETEST_LOW_BOUNDARY } from "@/lib/constants";
+import { resolveEvaluationAnswers } from "@/lib/evaluation-deadline";
 import { evaluationDurationMinutes } from "@/lib/evaluation-settings";
 import type { UserRow } from "@/lib/types";
 
@@ -53,14 +54,22 @@ export async function POST(request:Request,{params}:{params:Promise<{kind:string
     const [progress]=await rows<any[]>("SELECT posttest_diizinkan FROM progres_latihan WHERE user_id=? LIMIT 1",[user.id]);
     if(!progress?.posttest_diizinkan)return NextResponse.json({error:"Selesaikan alur latihan sebelum membuka post-test."},{status:403});
   }
-  let timeExpired=false;
+  let deadlineMs:number|null=null;
   try {
     const [attempt]=await rows<Array<Record<string,unknown>&{deadline_pada:string}>>("SELECT deadline_pada FROM evaluation_attempts WHERE user_id=? AND jenis=?",[user.id,kind]);
-    if(attempt){const deadline=new Date(attempt.deadline_pada).getTime();timeExpired=Date.now()>=deadline;if(Date.now()>deadline+15_000)return NextResponse.json({error:"Waktu evaluasi telah berakhir. Pengiriman melewati toleransi 15 detik tidak dapat dinilai."},{status:409});}
+    if(attempt)deadlineMs=new Date(attempt.deadline_pada).getTime();
   } catch { /* Deployment lama tanpa tabel attempt tetap dapat menyelesaikan evaluasi. */ }
-  const payload=await request.json().catch(()=>null) as {answers?:Record<string,string>}|null; const answers=payload?.answers??{};
+  const payload=await request.json().catch(()=>null) as {answers?:Record<string,string>}|null;
+  const submittedAnswers=payload?.answers??{};
   let questions;
   try{questions=await evaluationQuestions(user.id,kind);}catch(error){return blueprintFailure(error,kind);}
+  let draftAnswers:Record<string,string>={};
+  try {
+    const deadlineValue=deadlineMs===null?null:new Date(deadlineMs).toISOString();
+    const saved=await rows<Array<Record<string,unknown>&{soal_id:number;jawaban_dipilih:string}>>("SELECT soal_id,jawaban_dipilih FROM draft_jawaban_evaluasi WHERE user_id=? AND attempt_key=? AND jenis=? AND (?::timestamptz IS NULL OR diperbarui_pada<=?::timestamptz)",[user.id,`assessment-v1:${kind}:user:${user.id}`,kind,deadlineValue,deadlineValue]);
+    draftAnswers=Object.fromEntries(saved.map((item)=>[String(item.soal_id),item.jawaban_dipilih]));
+  } catch { /* Deployment lama tanpa tabel draf tetap memakai payload saat ini. */ }
+  const {timeExpired,answers}=resolveEvaluationAnswers(draftAnswers,submittedAnswers,deadlineMs);
   if(!timeExpired&&questions.some(question=>!["a","b","c","d","e"].includes(answers[String(question.id)])))return NextResponse.json({error:`Semua soal wajib dijawab sebelum ${kind === "pretest" ? "pre-test" : "post-test"} dikirim.`},{status:400});
   let correct=0;
   await transaction(async connection=>{

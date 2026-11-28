@@ -39,11 +39,14 @@ export async function POST(request: Request, { params }: { params: Promise<{ kin
   const entries = Object.entries(body.answers).filter(([id, answer]) => permitted.has(Number(id)) && options.has(answer));
   try {
     await transaction(async (connection) => {
+      const [activeAttempt] = await connection.query("SELECT id FROM evaluation_attempts WHERE user_id=? AND jenis=? AND CURRENT_TIMESTAMP<deadline_pada FOR UPDATE", [user.id, kind]);
+      if (!activeAttempt) throw new Error("EVALUATION_DEADLINE_EXPIRED");
       for (const [questionId, answer] of entries) await connection.execute(`INSERT INTO draft_jawaban_evaluasi(user_id,attempt_key,jenis,soal_id,jawaban_dipilih, diperbarui_pada)
         VALUES(?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(user_id,attempt_key,soal_id) DO UPDATE SET jawaban_dipilih=EXCLUDED.jawaban_dipilih,diperbarui_pada=CURRENT_TIMESTAMP`, [user.id, key(kind, user.id), kind, Number(questionId), answer]);
     });
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ ok: false, available: false });
+  } catch (error) {
+    if (error instanceof Error && error.message === "EVALUATION_DEADLINE_EXPIRED") return NextResponse.json({ error: "Waktu evaluasi telah berakhir. Draf sudah dikunci untuk dinilai." }, { status: 409 });
+    return NextResponse.json({ ok: false, available: false }, { status: 503 });
   }
 }
